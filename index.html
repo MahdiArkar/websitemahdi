@@ -1,0 +1,2337 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahdi Arkar | وب‌سایت شخصی</title>
+    <meta name="description" content="وب‌سایت شخصی Mahdi Arkar، برنامه‌نویس از بندرعباس. پایتون، سی‌شارپ و طراحی وب. | Personal website of Mahdi Arkar, a developer from Bandar Abbas working with Python, C# and web design.">
+    <meta name="author" content="Mahdi Arkar">
+    <meta name="theme-color" content="#3b82f6">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mahdi Arkar | وب‌سایت شخصی">
+    <meta property="og:description" content="برنامه‌نویس از بندرعباس؛ پایتون، سی‌شارپ و طراحی وب. | Developer from Bandar Abbas: Python, C# and web design.">
+    <meta property="og:locale" content="fa_IR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Mahdi Arkar | وب‌سایت شخصی">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9A%80%3C/text%3E%3C/svg%3E">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Person","name":"Mahdi Arkar","jobTitle":"Developer","address":{"@type":"PostalAddress","addressLocality":"Bandar Abbas","addressCountry":"IR"},"sameAs":["https://instagram.com/mahdiarkar.dev"]}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+    (function () {
+        var root = document.documentElement, t = null, l = null;
+        try { t = localStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
+        if (t !== 'light' && t !== 'dark') {
+            t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+        }
+        root.setAttribute('data-theme', t);
+        if (l === 'en') { root.lang = 'en'; root.dir = 'ltr'; }
+    })();
+    </script>
+    <style>
+        /* ============================================================
+        Design tokens — syntax-highlight inspired palette
+        ============================================================ */
+        :root {
+            --bg: #0b0d12;
+            --bg-panel: #12151c;
+            --bg-panel-2: #171b24;
+            --border-soft: rgba(59, 130, 246, 0.14);
+            --text: #d7dce2;
+            --text-dim: #7d8590;
+            --mono: 'JetBrains Mono', 'Courier New', monospace;
+            --accent-keyword: #3b82f6;
+            --accent-string: #93c5fd;
+            --accent-func: #00d4ff;
+            --accent-warn: #f5a623;
+            --accent-comment: #6b7280;
+        }
+
+        /* ============================================================
+        Base settings - dark background
+        ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazir', 'Segoe UI', Tahoma, sans-serif;
+            background: #060608;
+            color: #e8e8e8;
+            line-height: 1.8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            padding-bottom: 46px;
+            overflow-x: hidden;
+        }
+
+        /* ============================================================
+        Glassy background layer (soft moving lights behind the whole site)
+        ============================================================ */
+        /* ============================================================
+        Boot loader (terminal-style intro)
+        ============================================================ */
+        #bootLoader {
+            position: fixed;
+            inset: 0;
+            z-index: 20000;
+            background: #050508;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+            cursor: pointer;
+        }
+        #bootLoader.done {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .boot-terminal {
+            width: min(560px, 100%);
+            background: rgba(15, 15, 20, 0.9);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: 14px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            padding: 20px 24px;
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+            text-align: left;
+        }
+        .boot-dot-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .boot-dot-row span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .boot-dot-row span:nth-child(1) { background: #ff5f57; }
+        .boot-dot-row span:nth-child(2) { background: #febc2e; }
+        .boot-dot-row span:nth-child(3) { background: #28c840; }
+        #bootText {
+            color: #7db4ff;
+            font-size: 13px;
+            line-height: 1.9;
+            white-space: pre-wrap;
+            min-height: 150px;
+            word-break: break-word;
+        }
+
+        /* ============================================================
+        Custom magnetic cursor (desktop only)
+        ============================================================ */
+        .custom-cursor-active, .custom-cursor-active a, .custom-cursor-active button {
+            cursor: none;
+        }
+        #cursorDot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 6px;
+            background: #3b82f6;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10002;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s;
+        }
+        #cursorDot.click {
+            width: 10px;
+            height: 10px;
+        }
+        #cursorRing {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 34px;
+            height: 34px;
+            border: 1.5px solid rgba(59, 130, 246, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10001;
+            transform: translate(-50%, -50%);
+            transition: width 0.25s, height 0.25s, border-color 0.25s, background 0.25s;
+        }
+        #cursorRing.hover {
+            width: 58px;
+            height: 58px;
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.06);
+        }
+
+        /* ============================================================
+        Bottom status bar (editor-style)
+        ============================================================ */
+        #statusBar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 26px;
+            background: var(--accent-keyword);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-family: var(--mono);
+            font-size: 11px;
+            color: #0a0a12;
+            z-index: 997;
+            direction: ltr;
+        }
+        .status-left, .status-right {
+            display: flex;
+            gap: 16px;
+        }
+        .status-item {
+            display: flex;
+            align-items: center;
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+        @media (max-width: 600px) {
+            #statusBar { font-size: 9.5px; padding: 0 10px; gap: 8px; }
+            .status-left, .status-right { gap: 8px; }
+        }
+
+        #bgLayer {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 18% 22%, rgba(59, 130, 246, 0.22), transparent 42%),
+                radial-gradient(circle at 82% 28%, rgba(0, 212, 255, 0.16), transparent 46%),
+                radial-gradient(circle at 50% 85%, rgba(59, 130, 246, 0.14), transparent 50%),
+                linear-gradient(160deg, #0b0b14 0%, #050508 100%);
+        }
+
+        /* ============================================================
+        Three.js 3D scene canvas (sits inside bgLayer, behind the orbs' glow)
+        ============================================================ */
+        #three-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            opacity: 0;
+            transition: opacity 1.4s ease;
+        }
+        #three-bg.ready {
+            opacity: 1;
+        }
+        #bgLayer .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.55;
+            animation: floatOrb 24s ease-in-out infinite;
+        }
+        #bgLayer .orb1 {
+            width: 420px;
+            height: 420px;
+            background: #3b82f6;
+            top: -12%;
+            left: -8%;
+            animation-duration: 26s;
+        }
+        #bgLayer .orb2 {
+            width: 380px;
+            height: 380px;
+            background: #00d4ff;
+            bottom: -14%;
+            right: -6%;
+            animation-duration: 30s;
+            animation-delay: -6s;
+        }
+        #bgLayer .orb3 {
+            width: 300px;
+            height: 300px;
+            background: #7db4ff;
+            top: 42%;
+            left: 55%;
+            animation-duration: 22s;
+            animation-delay: -12s;
+        }
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -35px) scale(1.1); }
+            66% { transform: translate(-35px, 30px) scale(0.92); }
+        }
+
+        /* ============================================================
+        Main site (after login)
+        ============================================================ */
+        #mainSite {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            animation: fadeIn 0.8s ease;
+        }
+
+        #mainSite.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+        Main site styles (same as before)
+        ============================================================ */
+        .glass {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(59, 130, 246, 0.12);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .chrome-titlebar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 7px 20px;
+            background: #0d0f14;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+        .chrome-dots {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .chrome-dots span {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+        .chrome-dots span:nth-child(1) { background: #ff5f57; }
+        .chrome-dots span:nth-child(2) { background: #febc2e; }
+        .chrome-dots span:nth-child(3) { background: #28c840; }
+        .chrome-path {
+            direction: ltr;
+            letter-spacing: 0.2px;
+        }
+
+        nav {
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 12, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-keyword);
+            font-family: var(--mono);
+            padding: 14px 0;
+            direction: ltr;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2px;
+            list-style: none;
+            align-items: center;
+        }
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-dim);
+            font-family: var(--mono);
+            font-weight: 500;
+            font-size: 12.5px;
+            padding: 16px 16px 14px;
+            border-bottom: 2px solid transparent;
+            transition: 0.25s;
+            direction: ltr;
+        }
+        .tab-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-comment);
+            flex-shrink: 0;
+            transition: 0.25s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text);
+            background: var(--bg-panel);
+            border-bottom-color: var(--accent-func);
+        }
+        .nav-links a:hover .tab-dot, .nav-links a.active .tab-dot {
+            background: var(--accent-func);
+            box-shadow: 0 0 6px var(--accent-func);
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 26px;
+            background: none;
+            border: none;
+            color: #b0b0b0;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .hero {
+            padding: 70px 0 50px;
+            position: relative;
+        }
+
+        #particlesCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .typed-text {
+            color: #3b82f6;
+            font-weight: 700;
+        }
+        .typed-text::after {
+            content: '|';
+            margin-inline-start: 3px;
+            color: #3b82f6;
+            animation: blinkCursor 0.9s steps(1) infinite;
+        }
+        @keyframes blinkCursor {
+            50% { opacity: 0; }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .skills-grid, .portfolio-grid {
+            perspective: 900px;
+        }
+
+        /* ============================================================
+        Hero layout: text on one side, hanging photo card on the other
+        ============================================================ */
+        .hero-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .hero-text {
+            flex: 1 1 380px;
+            min-width: 280px;
+            text-align: right;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 14px;
+            border-radius: 20px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-soft);
+            color: var(--accent-string);
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            direction: ltr;
+        }
+        .badge-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent-string);
+            box-shadow: 0 0 6px var(--accent-string);
+            animation: blinkCursor 1.6s steps(1) infinite;
+        }
+
+        .code-block {
+            font-family: var(--mono);
+            font-size: 14.5px;
+            line-height: 1.95;
+            direction: ltr;
+            text-align: left;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-soft);
+            border-radius: 14px;
+            padding: 22px 26px;
+            margin-bottom: 24px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+        }
+        .code-line { white-space: pre-wrap; }
+        .code-indent { padding-inline-start: 26px; }
+        .code-comment { color: var(--accent-comment); }
+        .code-keyword { color: var(--accent-keyword); font-weight: 600; }
+        .code-var { color: #bfdbfe; }
+        .code-prop { color: var(--text); }
+        .code-string { color: var(--accent-string); }
+        .code-func { color: var(--accent-func); }
+
+        .hero .tagline {
+            font-size: 17px;
+            color: #b0b0b0;
+            max-width: 480px;
+            margin: 0 0 28px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(8px);
+            padding: 12px 28px;
+            border-radius: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.12);
+            display: inline-block;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+        .hero-buttons .btn {
+            font-family: var(--mono);
+        }
+
+        /* ---- Hanging photo card ---- */
+        .hero-photo {
+            flex: 0 0 220px;
+            width: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .photo-cord {
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(to bottom, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.7));
+        }
+
+        .photo-clip {
+            width: 30px;
+            height: 12px;
+            border-radius: 4px;
+            margin-top: -2px;
+            background: linear-gradient(160deg, #cfcfd6, #6f6f78);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .photo-card {
+            width: 200px;
+            height: 260px;
+            margin-top: -4px;
+            border-radius: 22px;
+            overflow: hidden;
+            border: 2px solid rgba(59, 130, 246, 0.35);
+            box-shadow: 0 25px 60px rgba(59, 130, 246, 0.18), 0 0 40px rgba(0, 212, 255, 0.08);
+            background: #111;
+            transform-origin: top center;
+            animation: photoSwing 5s ease-in-out infinite;
+        }
+        .photo-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes photoSwing {
+            0%, 100% { transform: rotate(-3.5deg); }
+            50% { transform: rotate(3.5deg); }
+        }
+
+        .btn {
+            padding: 12px 34px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.3s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #00d4ff);
+            color: #0a0a0a;
+            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.2);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, #7db4ff, #3b82f6);
+        }
+        .btn-outline {
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #3b82f6;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+        }
+        .btn-outline:hover {
+            background: rgba(59, 130, 246, 0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.08);
+        }
+
+        .section {
+            padding: 50px 0;
+        }
+
+        .section-eyebrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--text-dim);
+            direction: ltr;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+        .section-title span {
+            color: #3b82f6;
+        }
+
+        .section-card {
+            padding: 36px 40px;
+            border-radius: 24px;
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(59, 130, 246, 0.07);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .about-text p {
+            margin-bottom: 14px;
+            color: #c0c0c0;
+        }
+        .about-text .highlight {
+            color: #3b82f6;
+            font-weight: 700;
+        }
+
+        .about-details {
+            padding: 24px 28px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(59, 130, 246, 0.06);
+        }
+        .about-details ul {
+            list-style: none;
+        }
+        .about-details li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            gap: 10px;
+        }
+        .about-details li:last-child {
+            border: none;
+        }
+        .about-details .label {
+            font-weight: 600;
+            color: #3b82f6;
+            min-width: 90px;
+        }
+        .about-details .value {
+            color: #c0c0c0;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
+        }
+        .skill-card {
+            padding: 22px 18px;
+            border-radius: 18px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 130, 246, 0.06);
+            transition: 0.4s;
+            cursor: default;
+        }
+        .skill-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(59, 130, 246, 0.2);
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.04);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .skill-card .emoji {
+            font-size: 32px;
+            display: block;
+        }
+        .skill-card h4 {
+            margin-top: 8px;
+            font-size: 16px;
+            color: #e8e8e8;
+        }
+        .skill-card p {
+            font-size: 12px;
+            color: #808080;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 24px;
+        }
+        .portfolio-card {
+            padding: 26px 24px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 130, 246, 0.06);
+            transition: 0.4s;
+        }
+        .portfolio-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(59, 130, 246, 0.15);
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.04);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .portfolio-card .icon {
+            font-size: 34px;
+        }
+        .portfolio-card h4 {
+            font-size: 18px;
+            margin: 6px 0 4px;
+            color: #e8e8e8;
+        }
+        .portfolio-card p {
+            color: #808080;
+            font-size: 14px;
+        }
+        .portfolio-card .tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .portfolio-card .tags span {
+            background: rgba(59, 130, 246, 0.08);
+            padding: 2px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.06);
+        }
+        .portfolio-links {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding-top: 14px;
+        }
+        .portfolio-links a {
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 5px 18px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+        .portfolio-links .demo {
+            background: linear-gradient(135deg, #3b82f6, #00d4ff);
+            color: #0a0a0a;
+        }
+        .portfolio-links .demo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+        }
+        .portfolio-links .code {
+            background: rgba(255, 255, 255, 0.04);
+            color: #b0b0b0;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .portfolio-links .code:hover {
+            background: rgba(255, 255, 255, 0.07);
+            transform: translateY(-2px);
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 20px;
+            padding: 20px 28px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 130, 246, 0.05);
+            border-right: 4px solid #3b82f6;
+            transition: 0.3s;
+        }
+        .timeline-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(59, 130, 246, 0.1);
+            border-right-color: #3b82f6;
+        }
+        .timeline-item .year {
+            font-weight: 800;
+            color: #3b82f6;
+            font-size: 18px;
+            min-width: 80px;
+        }
+        .timeline-item .info h4 {
+            font-size: 18px;
+            color: #e8e8e8;
+            margin-bottom: 2px;
+        }
+        .timeline-item .info p {
+            color: #808080;
+            font-size: 14px;
+        }
+
+        .blog-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .blog-item {
+            padding: 18px 24px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 130, 246, 0.05);
+            border-right: 4px solid #3b82f6;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: 0.3s;
+        }
+        .blog-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateX(-4px);
+            border-color: rgba(59, 130, 246, 0.1);
+            border-right-color: #3b82f6;
+        }
+        .blog-item h4 {
+            font-size: 17px;
+            color: #e8e8e8;
+        }
+        .blog-item small {
+            color: #808080;
+            font-size: 13px;
+        }
+
+        .quote-section {
+            padding: 40px 0;
+            text-align: center;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 130, 246, 0.05);
+        }
+        .quote-section blockquote {
+            font-size: 24px;
+            font-weight: 300;
+            color: #e8e8e8;
+            max-width: 700px;
+            margin: 0 auto;
+            font-style: italic;
+        }
+        .quote-section blockquote::before {
+            content: "«";
+            color: #3b82f6;
+            font-size: 40px;
+        }
+        .quote-section blockquote::after {
+            content: "»";
+            color: #3b82f6;
+            font-size: 40px;
+        }
+        .quote-section .author {
+            margin-top: 12px;
+            color: #808080;
+            font-size: 16px;
+        }
+
+        .contact-text {
+            text-align: center;
+            color: #808080;
+            margin-bottom: 24px;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            color: #3b82f6;
+            padding: 16px 42px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            transition: 0.3s;
+            border: 1px solid rgba(59, 130, 246, 0.15);
+        }
+        .social-btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 14px 48px rgba(59, 130, 246, 0.08);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        .social-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: #3b82f6;
+        }
+
+        #scrollBtn {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: linear-gradient(135deg, #3b82f6, #00d4ff);
+            color: #0a0a0a;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 20px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+            transition: 0.3s;
+            z-index: 999;
+        }
+        #scrollBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        /* ============================================================
+        Smart chat assistant
+        ============================================================ */
+        #chatWidget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 998;
+        }
+        #chatToggleBtn {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #3b82f6, #00d4ff);
+            color: #0a0a0a;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.25);
+            transition: 0.3s;
+        }
+        #chatToggleBtn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4);
+        }
+        #chatPanel {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            bottom: 72px;
+            right: 0;
+            width: 320px;
+            max-height: 440px;
+            border-radius: 20px;
+            background: rgba(15, 15, 15, 0.94);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            animation: slideUp 0.35s ease;
+        }
+        #chatPanel.open {
+            display: flex;
+        }
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: rgba(59, 130, 246, 0.06);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            font-weight: 700;
+            color: #3b82f6;
+            font-size: 14px;
+        }
+        .chat-close {
+            background: none;
+            border: none;
+            color: #b0b0b0;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .chat-close:hover { color: #ff6b6b; }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 320px;
+        }
+        .chat-msg {
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 1.7;
+            max-width: 85%;
+        }
+        .chat-msg.bot {
+            background: rgba(59, 130, 246, 0.08);
+            color: #e8e8e8;
+            align-self: flex-start;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        .chat-msg.user {
+            background: linear-gradient(135deg, #3b82f6, #00d4ff);
+            color: #0a0a0a;
+            align-self: flex-end;
+            font-weight: 600;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .chat-input-row input {
+            flex: 1;
+            min-width: 0;
+            padding: 10px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: #e8e8e8;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+        }
+        .chat-input-row input:focus { border-color: rgba(59, 130, 246, 0.4); }
+        .chat-input-row button {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #3b82f6, #00d4ff);
+            color: #0a0a0a;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        /* ============================================================
+        Responsive
+        ============================================================ */
+        @media (max-width: 768px) {
+            nav {
+                padding: 12px 20px;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                gap: 12px;
+                position: absolute;
+                top: 60px;
+                right: 16px;
+                background: rgba(10, 10, 10, 0.95);
+                backdrop-filter: blur(20px);
+                padding: 24px;
+                border-radius: 16px;
+                border: 1px solid rgba(59, 130, 246, 0.06);
+                width: 180px;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .hamburger {
+                display: block;
+            }
+
+            .hero-inner {
+                flex-direction: column-reverse;
+                text-align: center;
+                gap: 30px;
+            }
+            .hero-text {
+                text-align: center;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .hero .tagline {
+                margin: 0 auto 28px;
+            }
+            .hero-photo {
+                flex: 0 0 auto;
+            }
+
+            .code-block {
+                font-size: 12.5px;
+                padding: 16px 18px;
+                text-align: left;
+                margin-inline: auto;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+            .about-details .label {
+                min-width: 70px;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+                gap: 4px;
+                padding: 16px 20px;
+            }
+            .timeline-item .year {
+                min-width: auto;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 16px;
+            }
+            .section-card {
+                padding: 24px 18px;
+            }
+
+            .quote-section blockquote {
+                font-size: 20px;
+            }
+
+            .social-btn {
+                padding: 14px 28px;
+                font-size: 16px;
+            }
+            .social-btn svg {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #chatWidget {
+                bottom: 20px;
+                right: 16px;
+            }
+            #chatPanel {
+                width: calc(100vw - 32px);
+                max-width: 320px;
+            }
+        }
+
+        /* ============================================================
+        Day / Night toggle + light theme
+        ============================================================ */
+        .nav-tools {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .theme-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border-soft);
+            background: var(--bg-panel);
+            color: var(--text);
+            font-size: 17px;
+            line-height: 1;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.35s ease, border-color 0.25s, box-shadow 0.25s;
+        }
+        .theme-toggle:hover {
+            transform: rotate(20deg) scale(1.08);
+            border-color: var(--accent-func);
+            box-shadow: 0 0 14px rgba(59, 130, 246, 0.35);
+        }
+        html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease !important;
+        }
+
+        html[data-theme="light"] {
+            --bg: #f4f8ff;
+            --bg-panel: #ffffff;
+            --bg-panel-2: #eef4ff;
+            --border-soft: rgba(59, 130, 246, 0.25);
+            --text: #1e293b;
+            --text-dim: #586a84;
+            --accent-keyword: #2563eb;
+            --accent-string: #0369a1;
+            --accent-func: #0ea5e9;
+            --accent-comment: #94a3b8;
+            color-scheme: light;
+        }
+        html[data-theme="light"] body { background: #eaf2ff; color: #1e293b; }
+        html[data-theme="light"] #bootLoader { background: #eaf2ff; }
+        html[data-theme="light"] .boot-terminal { background: rgba(255, 255, 255, 0.92); box-shadow: 0 30px 80px rgba(30, 64, 175, 0.18); }
+        html[data-theme="light"] #bootText { color: #2563eb; }
+        html[data-theme="light"] #statusBar { color: #ffffff; }
+        html[data-theme="light"] #bgLayer {
+            background:
+                radial-gradient(circle at 18% 22%, rgba(59, 130, 246, 0.20), transparent 42%),
+                radial-gradient(circle at 82% 28%, rgba(14, 165, 233, 0.16), transparent 46%),
+                radial-gradient(circle at 50% 85%, rgba(59, 130, 246, 0.12), transparent 50%),
+                linear-gradient(160deg, #f6faff 0%, #dbeafe 100%);
+        }
+        html[data-theme="light"] #bgLayer .orb { opacity: 0.32; }
+        html[data-theme="light"] .glass { background: rgba(255, 255, 255, 0.75); box-shadow: 0 8px 32px rgba(30, 64, 175, 0.12); }
+        html[data-theme="light"] .chrome-titlebar { background: #e3ecfb; border-bottom-color: rgba(15, 23, 42, 0.08); }
+        html[data-theme="light"] nav { background: rgba(255, 255, 255, 0.88); }
+        html[data-theme="light"] .hamburger { color: #475569; }
+        html[data-theme="light"] .code-var { color: #1d4ed8; }
+        html[data-theme="light"] .code-block { box-shadow: 0 25px 60px rgba(30, 64, 175, 0.15); }
+        html[data-theme="light"] .hero .tagline { color: #475569; background: rgba(59, 130, 246, 0.08); }
+        html[data-theme="light"] .photo-card { background: #dbe7fb; }
+        html[data-theme="light"] .btn-outline { background: rgba(59, 130, 246, 0.06); }
+        html[data-theme="light"] .section-card { background: rgba(255, 255, 255, 0.72); box-shadow: 0 8px 32px rgba(30, 64, 175, 0.10); }
+        html[data-theme="light"] .about-text p,
+        html[data-theme="light"] .about-details .value { color: #475569; }
+        html[data-theme="light"] .about-details { background: rgba(59, 130, 246, 0.06); }
+        html[data-theme="light"] .about-details li { border-bottom-color: rgba(15, 23, 42, 0.07); }
+        html[data-theme="light"] .skill-card,
+        html[data-theme="light"] .portfolio-card { background: rgba(255, 255, 255, 0.75); }
+        html[data-theme="light"] .skill-card:hover,
+        html[data-theme="light"] .portfolio-card:hover { background: #ffffff; }
+        html[data-theme="light"] .skill-card h4,
+        html[data-theme="light"] .portfolio-card h4,
+        html[data-theme="light"] .timeline-item .info h4,
+        html[data-theme="light"] .blog-item h4,
+        html[data-theme="light"] .quote-section blockquote { color: #0f172a; }
+        html[data-theme="light"] .skill-card p,
+        html[data-theme="light"] .portfolio-card p,
+        html[data-theme="light"] .timeline-item .info p,
+        html[data-theme="light"] .blog-item small,
+        html[data-theme="light"] .quote-section .author,
+        html[data-theme="light"] .contact-text { color: #5b6b82; }
+        html[data-theme="light"] .portfolio-links { border-top-color: rgba(15, 23, 42, 0.08); }
+        html[data-theme="light"] .portfolio-links .code { background: rgba(15, 23, 42, 0.04); color: #475569; border-color: rgba(15, 23, 42, 0.10); }
+        html[data-theme="light"] .portfolio-links .code:hover { background: rgba(15, 23, 42, 0.08); }
+        html[data-theme="light"] .timeline-item,
+        html[data-theme="light"] .blog-item,
+        html[data-theme="light"] .quote-section { background: rgba(255, 255, 255, 0.65); }
+        html[data-theme="light"] .timeline-item:hover,
+        html[data-theme="light"] .blog-item:hover { background: rgba(255, 255, 255, 0.95); }
+        html[data-theme="light"] .social-btn { background: linear-gradient(145deg, #3b82f6, #1d4ed8); color: #ffffff; box-shadow: 0 8px 32px rgba(37, 99, 235, 0.35); }
+        html[data-theme="light"] #chatPanel { background: rgba(255, 255, 255, 0.97); box-shadow: 0 20px 60px rgba(30, 64, 175, 0.22); }
+        html[data-theme="light"] .chat-close { color: #475569; }
+        html[data-theme="light"] .chat-msg.bot { color: #0f172a; background: rgba(59, 130, 246, 0.10); }
+        html[data-theme="light"] .chat-input-row { border-top-color: rgba(15, 23, 42, 0.08); }
+        html[data-theme="light"] .chat-input-row input { border-color: rgba(15, 23, 42, 0.15); background: #ffffff; color: #0f172a; }
+        @media (max-width: 768px) {
+            html[data-theme="light"] .nav-links { background: rgba(255, 255, 255, 0.97); }
+        }
+
+        /* ============================================================
+        Scroll progress bar + language button
+        ============================================================ */
+        #scrollProgress {
+            position: fixed;
+            top: 0;
+            inset-inline-start: 0;
+            height: 3px;
+            width: 0;
+            z-index: 1100;
+            pointer-events: none;
+            background: linear-gradient(90deg, #3b82f6, #00d4ff);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
+        }
+        .lang-toggle {
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .lang-toggle:hover { transform: scale(1.08); }
+
+        /* ============================================================
+        English (LTR) layout adjustments
+        ============================================================ */
+        @media (min-width: 769px) {
+            html[dir="ltr"] .hero-text { text-align: left; }
+        }
+        html[dir="ltr"] .timeline-item,
+        html[dir="ltr"] .blog-item {
+            border-right: 1px solid rgba(59, 130, 246, 0.05);
+            border-left: 4px solid #3b82f6;
+        }
+        html[dir="ltr"] .timeline-item:hover,
+        html[dir="ltr"] .blog-item:hover { border-left-color: #3b82f6; }
+        html[dir="ltr"] .blog-item:hover { transform: translateX(4px); }
+    </style>
+</head>
+<body>
+
+    <!-- Boot loader (terminal-style intro) -->
+    <div id="bootLoader">
+        <div class="boot-terminal">
+            <div class="boot-dot-row"><span></span><span></span><span></span></div>
+            <pre id="bootText"></pre>
+        </div>
+    </div>
+
+    <!-- Glassy background layer -->
+    <div id="scrollProgress"></div>
+
+    <div id="bgLayer">
+        <canvas id="three-bg"></canvas>
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+    </div>
+
+    <!-- ============================================================
+    Main site
+    ============================================================ -->
+    <div id="mainSite" class="show">
+
+        <!-- Navigation bar -->
+        <header class="site-header">
+            <div class="chrome-titlebar">
+                <div class="chrome-dots"><span></span><span></span><span></span></div>
+                <div class="chrome-path"></div>
+            </div>
+            <nav>
+                <div class="logo">🚀 <span>Mahdi.dev</span></div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#about" class="tab"><span class="tab-dot"></span>about.md</a></li>
+                    <li><a href="#skills" class="tab"><span class="tab-dot"></span>skills.json</a></li>
+                    <li><a href="#portfolio" class="tab"><span class="tab-dot"></span>portfolio/</a></li>
+                    <li><a href="#timeline" class="tab"><span class="tab-dot"></span>timeline.log</a></li>
+                    <li><a href="#blog" class="tab"><span class="tab-dot"></span>blog.md</a></li>
+                    <li><a href="#contact" class="tab"><span class="tab-dot"></span>contact.sh</a></li>
+                </ul>
+                <div class="nav-tools">
+                    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="تغییر حالت شب و روز" title="تغییر حالت شب / روز">☀️</button>
+                    <button class="theme-toggle lang-toggle" id="langToggle" onclick="toggleLang()" type="button" aria-label="Switch language" title="Switch to English">EN</button>
+                    <button class="hamburger" onclick="toggleMenu()" type="button" aria-label="منو">☰</button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero section -->
+        <section class="hero container" id="home">
+            <canvas id="particlesCanvas"></canvas>
+            <div class="hero-inner">
+                <div class="hero-text">
+                    <h1 class="sr-only">Mahdi Arkar — Frontend / Backend Developer</h1>
+                    <span class="hero-badge"><span class="badge-dot"></span>build passing</span>
+                    <div class="code-block">
+                        <div class="code-line"><span class="code-comment"></span></div>
+                        <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">developer</span> = {</div>
+                        <div class="code-line code-indent"><span class="code-prop">name</span>: <span class="code-string">"Mahdi"</span>,</div>
+                        <div class="code-line code-indent"><span class="code-prop">role</span>: <span class="code-string">"<span id="typedText" class="typed-text"></span>"</span>,</div>
+                        <div class="code-line code-indent"><span class="code-prop">based_in</span>: <span class="code-string">"Bandar Abbas, IR"</span>,</div>
+                        <div class="code-line code-indent"><span class="code-prop">status</span>: <span class="code-func">available()</span></div>
+                        <div class="code-line">};</div>
+                    </div>
+                    <div class="tagline">«از بندرعباس تا دنیای کد و خلاقیت»</div>
+                    <div class="hero-buttons">
+                        <a href="#about" class="btn btn-primary">$ درباره من</a>
+                        <a href="#contact" class="btn btn-outline">$ تماس با من</a>
+                        <a href="resume/Mahdi-Arkar-Resume-FA.pdf" download class="btn btn-outline" onclick="this.href='resume/Mahdi-Arkar-Resume-'+(document.documentElement.lang==='en'?'EN':'FA')+'.pdf'">$ دانلود رزومه</a>
+                    </div>
+                </div>
+                <div class="hero-photo">
+                    <div class="photo-cord"></div>
+                    <div class="photo-clip"></div>
+                    <div class="photo-card"><img src="data:image/webp;base64,UklGRjg3AABXRUJQVlA4ICw3AABwLQGdASqkAaQBPnk2l0mkoqUqpJEbsVAPCWVuXjsrC7u4/Mt1e4vo+i3jf7B/B9CHk/yGFPc2Pf/9D2A7iz90ulQ52bryvRS8uj2trVN1R8T7QeKbY054IYu+u37w9cpfGbUw/XPRP6uv/D54m4OTkdbvGDRwJ16c1sF7lAwSfQVs7pXOA6rKB6Zyq9xfgZg5otSKCYBqMLr/BL4Y19SoQdUCOWV8uUEFnojavHvGUfH6zlpxJsAXVrit4SG6w9VLYmu26tHGTgGBOrtne2qhu0p8eRIxZX8c8/nCDx2oKfGHfE4S6h/xLbUsm+unrCmea64v6yZYv/F1OgswpuQfyj3TK8eLG+FgrMTfIMKJh1kQSNtody7/98ryW831ZiV1aSS+aBzQiBHBb6Qdg5USYg9mxFAQ5LrDmcJEutdx/Etnp6Vi7fprAsieD6sZmj3JPM4Fb5NtmtRsJtRQvSYcEgtseJ8J1/yvYIE+C280b5qzHv3HvXognF5pKKdxA6sBhNkPhFN1hTBPS5sUfRToIHAARpzbdCMUIEElEHaIFqQThRPakhRW44McFqsIBY24KMFUD6VKQtFCMWv269/OY2Eba3YvBgPHqnLJWkhVnBmzb7PHRTeJThYmxSTmEMeEvi6Dae5ZFxIDI0+ovuYqirmg5AX2O7cMCIdioDhlAPApZrckdgGZo6e0kKpWFVREWy2qjA83JdTtvNV9vq5WGxVQVENJQFbeMu2lzb4GMjL7z5Oc5pK/ohRECJMnRRDU5w+WmTUX05ypPJ+bdtT3xqfIpder+I8E64PsGqKIWiqeh3SyAZ1qFihl1EdfokKUZbX7t98EDFRnWH/TzbG0pTv9lRzjwbXJvuQPuIMIHGGMCxsaoGwzE3JlLKqRSEg/vrtAoTPPwYUHM9hazuSC+5KOL/9fCekdcv4nOqXJQnqGLaYLZR0PATZpUszUGdtWURX7pFqDOTkUfKbjOaqDUYsmmlmKwuaF1UhNCAjlSA+qZbAjVdhBTW9V8TdlcSFA6LScL5jCOlGyOO9s8lXJdVqV9p9dZoRrMUNuP/4qC4kqU0WbAHOHFb6vFRxmhFss9NhKXCqDvsEFSzSXN74j1HEt6REBUK1Uei7iQQggJY55Wzpj5dAautS79tvyiytTtEeFGcFoQLruOXG5hO1SwG7qQfhKO0du4ZcmPLUX9Bizv1bqflEk7ATnA4GUfSo5bQHWXLQD4vEhG6hq5bt5PP72nRofPXx3+I9jfYM3F91+NqBR79+RtM5JBA+ssO7JZfA3UsA52JjnZPRupi4SimaPU5TZyL9wTRTyTF/o89iwo0aGJGKUJdwEv8GSBFDQRUMi3p+7RSqBojoXFUXY7FqEfxk0o+S+RlhmVXfKyitpdMYBtlvujEhUNV7/jesTToVjfItZAFa4p9LF5GHEAL/DNUoxB7Nqxks1QlRTRvsYhsk383UBy2ATe53KB/3BajztDXuWope8j81Yek98VKy833mJpP87Nn4lPyPjRNcsvsb799r6TGdIJDGzZig+mgKFVoNA8U2ixRJDp+5MxhXa0KdbU5Ob+McK8/Urze9j6n5ZeKOmxksnzKOFTgH+A8k/PYeB+04yBq7iZWWTcDUJTdbSSiB9v+93JEYstxI+3EXF69YKs2U/n+fD6TSRgch/SmXf658kvQd5TYuiTWBZJGLzewnxyBW3jDWgVx3hhpadRZAb59+Fj9XcFfQvyNPy+5Q9CTHNwYCjgYSVauEkZ+WGnYvpR0lKMMOYwMnuQCSVDQZt+IEY3Y39ToOnh4bpJZublcBfo9+djLRYyK2bfKN9fJtIssL7wE0Z3SXR4EMKrIbf6bjM7MpiuKMHyGAO1NqLdSiMh5H+rwd7Hi1NnuUUxK+sKl4IvnxynhWplhiDIZ/qybi6JkFgMMuY1NCM1fmqL3DjOMArSFiuLnrdz4p5CNZ0NwjwAyuj+n890i2H7k6nHiHv4BT8OuM4KRwV9BjeQ4mNjwDBBjJi2PHf3FQ9E1hG7T4YsnCS8i/Wq+IUnTCIDUwlnPE2ksl7iPQ+EJ8ftflOF00pwtSVXKrVFA2bKoHt5ouTmQdFYHYE9DpzlUut+EEzP+B8I/tS+GMquLPnntfsR7yDvmYvge9VudFqHr+RIaKiDGERQo2m24ilVOk1YS1xZNargLZBiX5N7+CaByKiueH9H+EBrioCVDnSqIe+oQwatu9mKrG9IKGIylH4UyWHft2KeFLjuUTRxD9ZUqWEpkJ3Tu8a9TGJX626hjvwNfGLzPiUC1YjSq5596c9nYcT/V+bjx6nPVjCgQ2Pky2MRoyVFEconhGVp/hvbLsNdhaB5Qvv0ZyLmL47Wh5rKJBi+X+pqVVabmToLELaDC7+gXnPsXsHRstl4mAYsY3jrP9Q5hQg6kuAHtICu40A+XQkn45uAK6zjzMe3PPtVmyUm2M/TvCCAKeY0g6NLT4DkJ8+RBnKvufb0Tivi8p3H56DoOOSNOwGa0K+LhOhQDRXe5IUywPWeMY4TwWNdqzKIakIrwsYdEuotMNWgwkNiEc7cOC2D2K/Guyo8IsrGcRjMUr7qsT6lp/9OVTjqlHjeshwgnytnVRT7fPtt6tRzqdVB7TPuc+xCH6eQJTnhrX3lmkHgQZW6Dzjaj1fPOIDdt5icvL6isZ1jz+Q7JmjOiDu1plZ8xFJPD60lQ3h5EDiHsagxKa5+4a9ECeyo12UesjxHkCmWMQdAdHvG3gG2f0312hUYBEjkYVVXrdh6cBo4Ms/0j0zRq3YIXPTDplkm70nxsxG0ElIxLK2HE1hfLqbqjFEmKfLBBHLLNudnEDXbg/zyNtLbeqU0rtzG0aOHNwiIjPh8/xGwhkWQI10i5NtM1I1s32CDGIFCovEqvywf+VXf6oQt5Fd7lX6mwJGBdmd8M9SpVpDY+ScokFi9VX3zlt3XURX4qiraukAr9EgAH2zsuAdNDuvEqOwHkMwH8y6yYwYx4sf0+RwToXcWn9jzJu0PW551+zbv4HLGsJ6xcmval1COn74k5KsYacp6nzsBflMZSidHj/EG5Gk2s18PbuPHGP9vcATLm08l2Wd1oL8oyLHNLRNWXTakM6IGf9wc7hoOG2n53Uod1OpkhWpfx+iaW7F61yK36p1RrqdeH3Zwk8Q3jK1nZ7Lk4TKRQvk4HNH+ixxnY1uGOAX/xktH5uyN992wLjNQCwyw4MMubNLQJYI0vd1gAD+5PN4koafnPIXqRDzh8y3TzD2Iks1uBL6SbWQ5Tu55s5oFBpbnIWZ4GWpEOWOGx8O5ciYITEfWgghreb/bA3AUIGheAU9F4VbCgojZxey9RIAkb+q42X/mks/Xz52bajlGQd90mj0nfoxDbe6lXBkYDxTckIiO7Dsn4wFei/8naCqjcuNuj+bvaF3/mPCk8CT6LAECzMaihUqP5iGI3raJKwYjvAJaZT56/Y1EFEA61SQCITwNc6umknf/NZMP0RWbVvfptgPMH29x8glqTzL8fhwZRFJKfxRrJ/lM3a7azcYjJANJCNgMpiP0u96cEfr6lmQ/5JcYympeIQAdtzGePI7Ti9nDdc/YY9akIJWPxeGonaZhb4SYtQrqtpAtj5OuF2y/j1YPixj/oTKomMPWs0beNLb4P/Hnx8W3PQ0iiXUBOTAk1Uk9gmc/o1F8jq4hn7BbaOBn+i/yvk9D4xCzOYRijNsoOOsvgUUHhZ4pY6hN04/uIWrKrG90+lXIdyh039KscGfwgb2fNRkAvVhQkp72jCywGafr72nd69khb8I83qENf+XearpwlQeetb+rj8yM/UXoxc0eEeKX0ABXY/YrBW70Uh7C6oaOOB5sth/PcPOgtvq1EdgrlFPdA5vd9fGDNZxTtTvHtE4buqrct4HGtPIsTv2bPWaVkzaStd8hnZz/BypEpvqIe3EW19KnbcIGfqi9dYtGi6SAIorInapaYph3ZiUIarzkeaoqgf/qXXAY7lMDNauk5AYY2BZURhDhjZVBrDuaXlhLbTYAhJ8KuiEZziadFi2ZUokgm+U+OTqpYKKFuEJjdTeHhaXU9436ifIj32Pl7ZZU93D/B4wvSt6XT9u9/I3+LctraTm5iFxV3qGnIrvHuQJx/QLxC0Y9YKn7IPh1KWmFz4SL71OmnIdB+M77wGSWKqdR66auDQru+yfxhD1YYaIXG3MwHDpqw2fohdAKod9imaTjkng3Ne5bFdG8s5xXnq6QzYyJj+H09BVIX1FVASHKvP14OBb8BygULez0Nf+Fw/D9oWhysJ/vSUp5ta3IGoWdW4KMTFFFTg65CBhqaVQGIynJ0IflHq/GBGiF+/1jf0yf4yZ9zYYLt/dJrc/4K5w5Z51pf+NvPXQJIOk1/8GUoo+5z55cBJyr7Mjj2yEFfnlwr3UPICc+uC0atAQ4l3OA1BIecmhGLjS5D1gGhDJ1Bh4/0oVyM1QbZAsoRbIPhOqZG9TbqMy/7EQNPJTitzQKMv9jsvXBZrVDBZw3n/d2J98RedR9nWtgRWd7doLoAsSjbf1561SA7mrRHqUXTRW27EL71m97PMbAyjClMh2QJnPZlmahrdSuE3M5hgFUHD6kG2vAjQ4oBVNS18g6ttpJ8B3cWJNuG6x3kqRlHbVA3QUeBo9mpUyRa4gFTFxt75BvLC1O/1WCmIfJzhS5XWBXNLluBHvXBGN9mY7ZrXiRGEUQ1EX/EelEW24Ax97Asx8txKevHoaA7HwQYNnyaOTCc6E4eyjjr8wvoYWYQITxIw+vx0D1H/FExMwU7WC0thc0yxBKkxXuLRAFa2tRH60ALqJP+EtEBCLQ1Uozc1X5ycCp9ojHE0KKSlZZqkOcgY+BFCdmNlOOB086y/uQ8vV6yaFPRdTYOT7TdBni3e5Fwgt85H5VmDMo1W10aYDG/TJAnNEtOWMzi95tUTUgbjKJ7khh1wibZCYx7R1XbijJZBlRP2PbqcXwhucBY8ASVr8V1k5efAKfPL+bdXUuLcCVU8vsovt43P4yqKHVlofAwCjfJUbOPgSPiDoMJ0idEg+Zv9tTTuc6CKvssRskhXMTwczsyJAkc3aN9g1sggESyUijKug7UYG3oeOcq4gwPyYANjtKd0Rtu3WbfcUkWTMnhI10tA2EALT50QxrLPoyEZyDxy4EUNBhy3IhMjynugEIT+ewODTpgm7mDBnw4GJPoHEsPf5LckmH8j8mVvQpLHQ0IvuoB9PdFa5ArZv1jhS3nhGySHJx9fPfzpaZPdSoVb3lJ/BYbcBoB8Ob1dg2aTcC2aBdI08AnwiPCUnAq2ItV+zqFYG2U1kvFv9nq7sm2dXexWCP5qmc+F6yo5Zq2Id5uvtoSHIr9JvfOi7C25UEFCzK3aVg4fL4ThrNFr1y02I4+05ZuZKAHrSm1oZcxxh6U/rWnxtttZBuwRZc1caxg6YrPoQfalbZpPKzSMmZjj4JCVQ3lk6HjXbI+CpbTrMOwpQZGvK0KarRPkeGsJm8/35kbSxsD7dQMuBQlh3DnSA4zvvNNmzbgA1XAENjlI8fraTERBlb0hMzQe6DZONFqbETo2TqChjey8SZuBRlj2sFibIp3akCrEhSNgRQM9b+q0K2x2RCz46o0/gj7JaHmFr/Oh8r6dZ9d5Ps71YH2tNGNH/CyErbAMPamjZo/oyNOzw5yYi4TsfmUUkQdiYB7d3PhyYyppiB02Relle5D/1QayfffxQ4bU1Uy3uGWERZVAdP0J0Di4BsczYm9xCwbY3vg1II8IKgPsqSHDZ6gloEGYnsnPH+qceamq9aLbQHhIcxf/Z6lgXd6GfSllYVDTB9vgbfUwVeeTgIHw+2mqebavSmTYZZBqQ1REQKbWmVq7b5SBQ0212hMyemMVLwcPKQt01rj2CJcbmf7sTV8pvQngQoPm4wluGMjvRyHN5MGsU7DMRDVW/qufUL0pRS9gtEVTRhuECMy/bFN+oervO/eIG8YYazPGfVz9RWMLvYZeCrSxLoHERglnHj92Dy/Mi3yMevTeODrUX4lRs1gZ6CkL5T4QvXsEOw/Cf299gQBJsDMqjm4LhZqO6lI+8RHi7LDH7C04xBgcFV02aVqRbgAHcTYnskh7zIgwMOou7akpa1yICl49zwsE/q8MX/Dh8kqHXPHLi/XscT1n6ZuZcQnap33hGaj4nC4Qc9iz3n0RwVTobm1azpRyvnytoGY5tf84bn7xeBKrF7kb9vaYRn5GDj0lvcV4IXsOegB7yfsOx2tevGhtC58ytfA2i/A3gOOn6u99gybvpz1ShPXjkSzaWjCRQ5lsss/Dd9vznn48OJdWdQyFmmdNnBR+1ngB0tUk8MYWoEiB1ZSkIhGa3IqT5N37HNn57mwGOvfR0Q4ioD3550huvjhTAC/IauuzbrfgSrTVSHi0OHHztOTJ39IIuls0mUXwQ/zwTEiXb3NnxOWtymAhfLeEWlkSb0lXBcqTNCRnqXxt+O88bDiFXdn2v9tcn/0tFX1ZVdkQEA8AXTLf8CTdCmg7ezizal9jFpsZfRyvr5eHnLTbmb9XZIl0+fsIk8+DdGDTMiPA5FufmW9mXHcPYOWS5Sw4syZZdPbiAcOVDksv3ODgG2kWYisX4RdgXYGF2pEhFnTpfnvtskmLA+XtJBSNQ43pYVBpN18od7FCvUgccMA7NuHH/G9keie32tkCaoKn5lGN1IuOgWL1MWQTpDptm1FbZNc+qNq93eGY/Mo9jK57dQWZ0DFrDi9BonMF6YreqILnwC1OdiVRE5pllRCPFlzR4GHEEOQX2hAIRy0bEW3ys4WxX3SF2DSIL+7LOq+TzJdjmhSJ8E1oU0BsGIkQNiM3rgQL8HluNGBa3ZZGTPWdcGZmXPfPfF/Oz5l0ZSkYYJe/bWJzX/nu6McDMyOpGzmSIyQAFZ4csDtq9pPB3BQDRCi2eGQ3WhQ7ZZie4hEaID+gZsZlB9K5yWpIgMVRRG9OnoZEDyFqb0h381vI1TeRE1C+oEqcsugC6QBvjfBMTqH6yMkn8jFKptQGWdRXHlgXcvcfLZZxVXKQo44fcWrqNN14GMnnfUT8J8LRGCz9OwKFKFZoFe/Snq85UWFPhmpA2tK65//nnZpPV4bPZj8H+Zj7Gz2nrjX25WlxuBPhaVb6J9sk6C7rfWe3iA59yUeJGtolt3vnUQsItS/cZ9TrW86IUXaJ7XCf3bbJIdBlvzm+5dr24e92WWHMB3qPIo4ylrBd8aJp8wCBb6pix9vV/slXmt1yng8o/UgKqqPhBjJxENmz/mR9lLrEtltlm459fCu0uY7c9NeP8cNv78kxAReJlWH8Ifk3nzZKlLeZR//Dz5cn6agTKotXRAwrs3fdoP5tzUU8RsC50JKPxBajRj+7N/NrASMe4NZFgi6gVE9TUTQS9KEao2vkjFCprzqCgRLzR9iG2pjL4llZFi/rdv18feRCtUxE9i6jo16sfElPdnDoQwMTP4x8H0CAHsgcDwVHe25yhAZwyqUq2vqOdvVz8yKKUiRMyI51RmjbFJ7jhxa5SxKDDsWEsLswm88yuUeF19mFx1mMNmTmoWCI+2UyBIeTIx+SGZnKB2NY/kvi6Id7iWNYUd7yvKrXTZY/8/BBRGkjlToAUumiX+Tt/KiwdXxDlQbE83ragVPmG/4Xv/plbfze9OWkzElAp7Xli0uDk5aqqfkCX6LqYeFBnMVJCYQeqLx4EKdlpjKM7g1GXYe7gZqwlPhnOpyIQnRqQUmYpVsrh+I73jN5wb15iOnsalh4Vc1bFx4PE/38X5+VQrvEMpSTm4T4XAxsh/Ze7VloVNzO67JxX8kd934UTvSyJZWCu74L+AehVORl13e6m+FB46/+iBIFutDmlD/wuyZFfaZff7NDTPJyvc63nXDJ675bWkXZoaND44vv1+Hckl51+W5EoyDBieLuyIFPX3T9FmfK1UzTgzlyFl20ZwvML+ipcyMqYa0bKSCTIsPy3+htGb9aoRzijDLUqNIwi8SEJ8McLuGa95yCUJ4Piv5aA8iaR2hGgz/vF9o84rz3YXt3Ct4NoH/FKJytSXy87Hs+cMxCUze/tQgcM2GfuZInFD+UKpYFj8mb7QgaOwpLV1f8HaN9Kpt+3q5lB8QahfoMJsGWGF2/QB6Yn8RYZSOvis/5mcVLjSw5FDvd34LiYmJIIBCrb1GvEyxndKtHKNTu3UeqKDpXgxar+9YXs/ihGjLkJ1lBccVc9giRi3izI3Q2I9XtGaNO3E9QnwhVudSFddVBnDAoG1+stiDW6yqp+R7xHiZ3P7UKHTDocVXdksJdx2CCOuVhjj01PJXBI2tf9akVAVWtq0vgd1C/Cqpl513E66JAnvSE6DGuRyM7vR1976pS4jbEJSdBcWdlC2dJwyz1SEjc9F5JD0qijM5n6zS2Va9p3eaP2uCkEKJa6L2NFA0hPe98nj5CIfculB6WcB6gjPyv7LDZaxnZ1JfjP01KQdP3zeOCZKHekYa7CwoVzncf6yiL5ctF5oXCvhjsEls5KYz2nfe44TVKA8YwcPxUUozoRlxnyk8CnDQhA2kVmnz1ON3H20hQaBnw37UmYqjX4HccHRWerw/u1T4MYiE9yOWVFVkqIhoFr82OJwt2btofgMEDyssQAbR44OQ8+BuV1L6hXS491phBGuzMhWavt8Qks+aLa1FYSy3CSvLm3ygJp0XlRu5v/mCXgU7DAOMldrdQJLQGGfi6M/utv57O/GixeDE4m4VnC92y8oZuq+RC0It0B+Wdfop+SiT5ib0qFZgxYWfMv/xSwqCQPXwwawbkQpLHiRqr/MtQZz1MGlLOrSHq9dDPiBpIvIGUQSBy7qb1N67bJt69eVb1pacFQpAqAXR+obHd3xuRDNdy8iL1GeARf9t8jv0YCHK0DaKBnLkhfASVC8vcU+OpsIrBGbgGAa/sjasHl4WkweXKdXqpLLOJcZpLvdOg0+DZpXHzAA1sVREPP/sLLkKBZ3y329hUz+fVyh5aKAD3AnGan33lV59Omn7VuECoNesO/s3CGAHqRE0HL9XHzAXvOGfiqR8xEx5HvVUpyjMtVxspPrYAXcuw5gvkS4g436xW6uZK+q0V9wYLwIhpcvMgnc2Du0P3c52YlgZbkD9yu51AzxgsoAQ7gzxDX3G0qKvMcvMD3i3/RhFvlAc/6NtKAPfCJQeJRajQXmndTdFiCxWGp/65/+hhDGQ4U70zCLZ9wxu8WERtUnd6lYDgNn4TyXTa3tasFtnlxC5zKeGBvjXiiTsRocCP/yi1Pm3QpLn/la8wpHg39V1dehqM+bHxX/H/mTaEWuP/AuNF9LfTLKKmNABd3UjdxjUeumLnpQ0w0A0qqyyPWjoEt/XGI9Yy4kFZUy+iHukNRcaa5MzICRhx2Wcbddt2futtEmg+K65BWFC4ar01cj6S7KwD385WD28uCDtO3Itw8whsj5KxGYphb+407iP2DrYTE4XEULyiV8r3Y8Aw9l+xORzvPdqu9L4MKaQTdAFE8qzY+maa+rX0D68rZ6zpZ1vJBdH1wsP8GyWJYJwCjWER8JNl/W+Y/CnuZAkL7Y/DbUssZsQRKRHdi8bUBIKHRylq1xBLbgOKiKmLv8l4v+/iR6DrM7/+yClwPVLhTZilVgYher3vjEsn/TXpUEq7xGT/qs+62tHvK8kkaF4lrrJs7Qi9OYMOoXowqfi9ly84w3Y9sB9yFISK9ALRX1U0AbI6ahOnwhwt2ioCmIklph2RQz4b8Q4l0mAXNAKaSt3qm6VhfsAugcmBWjFtF/v9wbs+VyBJX5hhEjDIAID8lmZbpQf/6O0psHPWVEMymxBK3uItbVMv65l39d2jZellW86WNPXeBYb+5pji2ftwLeVxKTiPsPrM78fkOAZp2YKWOqcyarp5TPJJoBOboSbLq3JQFIbUusf/Hjly8yZRYRDrkklzyp8tSHR86wOtbmw4EE6FelplcHtrh59u8Ss3E/NFzfNxbcawFsFdpEQGnCIpVuaP0Pu6K6YkQv9Rmfh54RUvpX0y/eT+rHKcxfI2CtZq6KoD8IGpom/wlDOnPtn3dSrd259QSq0/7JRj91DE5OQNng756G/5381SG9PJ2jS1B9TL121dsd9xg+2keil2IpUTjI3/8l8mi8SAjKMZOx/6gVQN5hOQpvBF8k+orN7LUXp7f/L/W0ee2n0tNXOCFtOhbAUwSqhuddJjz+k6U08u5LRUvqg5yulPhXlGl6f6CPJe6JMDj3+IVqEHRaztmj8W4omiSQFUju70BhNHHyc7VxyVEeBVfLYaX66Ec0ZedPCOMRbWn6tFmzfIqjV5t4bKOtBPvMEGRDM7ct4+kPl7ac2gaC5PGgrBDo19VkC8GD86Adt8YXAbtX+tNxrdR+CbYbRi7wgQhSpcpRN9BayhtgAnzerEhv8/y8zZDxy4ufQwI8/c/Q25mBwZ+J8ognOakFhtB0uM0H5q6it9XCstktPb+p55RdqgdvsoRrkcBjYA/p23GO2GM1a6IJ7K7bkDTU8/SA3lXxM0m+tiLLXtRSYjABnJyN+OCcFvzb36ui3/n5GH4j9MLp7WWeIQei27CvpmoVuqBpiQQza0ed4Op3h93EIL8cm3+j2gHS6tjlLcoTfl5KIDkwiEtGU+4TEE96jv8TbnbkkKPuy7NGaNTj8t6LPCkaNO3gH6RPGctYk6YRcQ4TA253f0nwI1cE+4+cuhIyLt7cZa4wmKIPW6bfmGr+T8pZ08bQ9eSek8UHL1ErLU7SGUfhR51Pic+PFjeJ5xfHQgZGPlkH9wubGlqtroz4zIYX1/dqerjXanBWeRw8iXnREUFV/AoseNGidw9DLuxoPgzQJGVhCTq/0oxCrSZ6A09Sx77Invu03VHFm1K0WExjC2KwZvWDFuoDo98RgF4vtqtyclkcMXPF2l0WceFvRN0gUMaEGQ9e1GtgekLiuS/ryshPoRGlA5z17+umxiWIl+6oNXIT/OwyDxMSTNi8tvkQJVkecwlv08sxRpvPMQ+NVgzvOT13I4JuDWMoO2laF4OqcqBYcFH6M5gDem/HqJ0+KbjTkLPd32zqLQvg7xiYz0kF2S+NYzgVGrWwainBUDHHeXNfjOq+ThjxUGcIjELZTNBa0gb1jV0VThsDQcSMEdySu+A9rK1Esx642McNW0+FzRUweEG9bFK1UHfjAueb+VvbBn+OQ3N+RXUKFKj7UTwoJ3mm2N8PoEO06IS+aG0aaI5RC54JO7fNX7nIQe1wNjEoyfnIoBYoXIWL89V2oNmH3lA8MV71jlBQmKLPv18BBj4UinPDSz0+soZNm8qRQf5Bu1olqL6Ylzly4YsnXFEHAGYDN5HqfGMrSc2zI6fyw8jwgZDe4ADwvf5uY98/8lNnW9T66HiBOSmbL4UgS4hAo44hh3Li/BylwddRIijqXRxfOwPB89UJ+k0qzehTtgTfBq1z53F1DjsjOFAneS97UE8k2qle/qXoPe6sWJa8z2waBQmJpPIO+Lu2jSqZ/k/EJICVguZh5FXKZ+NWRvgxD7921TnTl/myee3ySh0nOZZ594s3w/e7VJ1Fk58SN+fn+DRS8xsre+iMgPu6Ub4ff3yZQgW9eGIiEG5hjasSEzywtVmlLF2E34yuRWxYVQK8xACAsjUDXqOoGfmhhy4yoMVDf3v6PfxWLS0LX+Tzf8TPrpnnvNpsGybxOZ0MfKXXG+K6IZwqTHyZSYT2QN8DjPPLxGcKnt+FMxUD26TIXvABfe8J6bkaP9b6aIfCbwMb6JPqjEsCyDrqkTS1KQ7UZEgMYUkvn2ozl3frV3eM9hqOYFSjyvNUZpg/uf/95gM9y/0/QJEKLCbeuDOGjBeYpW0sCcNWzWI5/tXc4nGzqAWZCWjYsmg6fDlRlbSSXXFAQ6d6ttriRZqxwIymb0V7+XMEgb8gZpBPEYFAUbHo1eMp78t5mPVGQVa5SVsjAsuvT6cXA8yhk8WPtbZuaRYi29B50Z5bPeA7EpyZLqG/R1F419OG0XPvpD+rfL4bcHIzHJTnWMMkSHjY18hX+9HJFq7PfwV6hErz4MVRQXFZBpOUIqZlCs1lLJHOfpdE56+y9TeBbFXLcprGFhfNeO6ym3xAijbLV3QRu456vXKaEqYPbJFndUlk/t3jzX8g70zwVcXniVJtYxKYIvFodt49MON+MTB1Oc0GOCxovDspfZBbN5Hr70z9uljFrqzpqg0ww4QML1/LQWSu12lBr0yvFXSd223NuG+JQuENKuoWy6IxIVvy/S8YV8yOTDsqoy32F7tjFR/kGkNYfIqWGqWtA/LsXkQn6M7622Bbz66n3SUMK9gm51+6+ywv3ocziw6jSETM7xrJUmDbuCVfnLeIAH+VdBr+0cVU0pJOmBB721YSS92jhTwWJrKTqErCo+gFXkYFFNNYclWs+ajHdRCvyZVLSY5FaPYUcvK5MO+dqDxQhtYUIzpg0UxHLAnTlChvctqVQJQ/szo72Te4negbQ/aYtBEAcoR2Fmauyr7cOixU73enB2K8Z5QYVGykY5yF25nWlbT8IV9M+lm4mn2Ewx/ZgYdfGBfhSRG8vraToEHdfCYjg04fG0CHyHbFLh5WYQhpMpe5tArOU2ELz5z5XlQwz7p2zlUOy3mfRT3VcPmIGEypncwwv3+dvTs3pkhp+cPHdGtTE85grWSDWPx4P3kwuHLT49o2HK6get/AeZT/IS22xY7J+3GCN2jw0BwwmkGQl5zUpKO6WzOsFFakgxeJnC9Vv0eL+a+smh+IW3h7bOpQTGH/Y+InoS6aYt8bL1vCoow/CS7zIXWfIh6yP+nBMiGsAuxhjyipAV9YaZU3FuLrYIbXgOykaMEC1ouQoQ1P90KAIF54ysqzf8z0bAuddvWKkKIxItNk4u9UuayUfQ/6GQT0j4EK7dAMyNZcV2E/VVe21wJylZ0D+kdRzVd949idpu/IjV3XQZn70QkwXfpfi4z6Y50KyCg9Vf312w75Orz/ewPwCxupDT1zl6lg03SbuuZx2Zz5D8T+f+oz+gWCNMUik8ryydTy39Jod5pIP2FfZ13h/PmY+l3a0hi9TXZ1O4u5Yd/wPVzRLO1GJcpTAe20E+JpylFfejUQisEqYPn0a1VK7Sy2cTMmfs9cvjTmxsrChaP/YO3yYpqPMNQLX/0fT2pvKY/J3JVGwQRqpY18x387VUYrT0GqSS1EP8jaqhsH5lQtah6UblN3tiVBUqtOtw6+EDjyBrOApMJNZUKo4ed7eiw5ZDhuN1JfuPVkhLBaWWyY+QetCpRqSpXL8TMTPHuYtSs9oytfI/CbkNCVqvi8aFVd/gYSY4q3axxAhynbmpwDqZi04jYE7KMtOR2EGsfNU1smZPXuOcy5Dd+XCRjTor2OlChbERQlznpjiYT8xnaav/mVn/fBHC7r3wmtQnCwx193RD/lYKiq/+tnRpE42e+KGH/4yI3IH9vkKz1ux1OoL08UoqZ5z5z8+3MVnE1+gOyVEEHKo7pHKwdwurQ/MYxtjbxL/MmeC6nLdoN3AxP85T9/P+BE1mjvMHEUR+xiGSWv8YeOnO+cgX8uUwKjzPNxfmZ+4z/79cpFL+UVMP5PRZe9r+6d4Hu+tR9Cthkr5eQbrSNh1yNlZhWIl1FmYaPenY0iAmZXfkDsP3wfqRiO6WuiM0L5uXUv1t63l9iddEv5zwF1ajLZwKI/FD/yovvgP1tVp/nSEFWlA8LRHbXBw4bTlvacVNYfvOia43tXRB4SMD92CfwSuk9+UZ9kwpwKKrBlZAobGWEPJD7onaaC8LO+Q5cW02OAKucrqqmDeDr9NVsOKg+/AWwe/kzh77QMYDNemHuzeQj8CcJEwMUgKv+Y4OBiF9ySSSUXc1dzqXZ6T3wGgJXkBHeHlxUQM0YBUVSFDjobEy7jdVbAdu88e5PYCCQ65Fo++VxmQAnasPNuzTvF11KXPGQT0X61E04EHTnZnlM2Po9l7MmPLXRP3flE4y+fYnwVR2Ey40maBue7ibMY5mrfXbTqzDN5TrPtPQM4SJ5YLGcNHwsD/80tmbqnfnSzMKiQGRMoSjlPkh+BRbrFuTQcKownTCcMJ+4TSf7fvIblpWtk14lA1nWF2AqLAW5m7MPBM9kxswdoMI4RpYJ2o5XkUFHgF3qCtBaCDK8aiNZQLBYBxY3M8QNuDdctDuGUa73og3I5cSkmDYp7PuM+A9mtkg3svrR9bGsZDABcIDLKCq+sbGZoIenAbVyk4wCAz3Oa17oKA1oDAjoRcawR4LjtxtAYQquBrKhADkGsw0BbGSGTlUODPujXMMz/xZJliWzUtyQzvAiVM5/3RoNHLOoQGe6byA8/QbXk1OdGp1Ay7SI8fYB6Mnv3v3+aYehBLBTVt36jfdmTJndAMgu1vtz25Cdau5t+kl9A8XlrxgpBwCwjITwmYnK1Nju5+zIUKHeA4E2UWT5fx95ziTS8viW/iesbZP2P/vD5WI0tzuEBHkX8RsL0Fh9MamqVYdWqluu8EYMDO1qAnB7qbeXozsQhNF5G7GQdVxqt/htQf/CTu+VAI26XvLPrfz7THelZjcr9Xkal7CXXOjXe8FXjTpYpY70raJNlpvKUR+Y8yhvLfRN8nPLFYHvK8m8/qKjKJlR9RlNeug5qtn5Bq3d81jNObrqD/aagySaAEV7QZlzPOALezZVOJKQYVgwucapJFsXDPej54AaGfOlHZ3IU74hMEzf7qQ5bIfZE165cCe4m+MOcIFCboX9AejSVFYRotnu1EHrSmL25QWZQ98I07c40vqe3h1HU/eWuAG1YF9TG1KcoPYbMorsEu8PXoiBP8BKUM8OvH+P8TwGFtXACG9pwTp3lDej4kEjVgWpJMir81T8XIQMPkRTWHLm+F5fLmye8i0uGnNlJJ/hhutAOU6EURbChJczTCPU82+ZoPJYOD9y9BUH8qwxC3ioLNjEM6BnUhwQrp7es8YZNqWAUVEBscg+S58ISprcFvfVaSzJoVN9ZdAiivsCm/UDcp0E+OWxmFDCvR6gLmr8OFCcUr7A9VXSyLNrUUcQDVmcQcmSByOWUUvG21d3JaN0nBzt7vXCg3z/k9buOU9JE5I2pUQVfuTNgPNQThBDUpvJSe8O6oh5b7BONQBGeXP6Ctdpcjm3bV234G6eYQX39lIuCsCOh+jctLMrpqbYgdbDaE8z91RREky1Qk5+5RF6l4esQKyL9ux8rGshmvyXiDwNwcG4AeqjjfE+RkA0xnb9CFqoUr1d3uSh95XGIhk75s524QBeBrbYlMCzoQdxGKEFHt6cDSK0IYQrz3V7PlSyy5ZMyHm1QQQNl/Hq9juWcCSeF9i9JbTMmzItoDrGpWMYD6zTsc46MD9h5tL1k5iVkxJyq1YWvJMRuvP3hudaLG236H6w1/A69u3GxcvpTcdb92FcoJ4w61nGXd1yfo+FlkyZCImeXP+zT8P96CwZNIRhK/UzTevSU1/p7Q5JPmOPtGP2qz8snr7VcAALJVCJIou3/AkeRHK249P7M92bZxu163T5+z+QuMVFErV4ATMfR2OENis/3RZRnLflBWVsB75RPckDaDDgQkJVTLsd7FOkiLx0YrVzrUZ2zxtWitl/5dV+3wsv4/Owti0LuKbl3US0OkEfFT/k2JpHOljelAGkjRJ5WUToxIkMSAvWWatLljh0l2dLzKSKicJY2ZDlxmpY56pG/veiG/bS5c+k26c862TRJiv2QarsYW1+iYrECZQ8hheuou1FVhN86ul/5jEQd5IX5yo54Xiv+okNE9qmtMNVbzlNB9JBxeEzu+ek0mw9bW6cwq7cWCMvz5PHqm0jKzFj0gg1C4GFE5z6v0u6hUaAGWsm+qB8cQtERXN6qz/WknnL/VF0GNHjAXxVeJPY2FASAyfG8a9HVhZN0sm9h4mi+EOsJ6xJkJrILm1bm/JO81jWjePJQlGmiKO5bp9QCjw62GJZhZSkid+oCXKgYL6ZoqrLqIZUjCQRkr0VxMyP3wAg0/bVWpemLaox+/cMOtE10obMRBmdMpg+Wd89q2XYirnNPSp8Y8quhhz111kJXA94kG5PBgZkU3T7iZZsQcE/e/AZbt9jF7GST0wxn0Rf3a53lTi0W47echAVRYsHcquLPHpJvmhhC5HwMEfYYTN1lv6Sd4zxKwt3co4cNScMYv87KM+zA4xnG06miOogrjxoUcY4nGApux5Plc7U/Y+WrEvkAid/7Gwrml/cz8aUw7hJ2yPc+6vDTaVfzdwiqRWhPzDt484JRSOf59ufDtm1rgec7HfmuCt11WjePdC2qY2cEcNBhyEdweE8GnzVSsRS61F5uvU4Xhxw36nbycwcysMbHxnkhLsbdVmVnLUQlxqGIVDSY91/4IStnHA6NOUJJxNDcL24wqvT6hXfZ3GB+K/uOnpfZ4nXy+vOvayZ5MY+7QY/4f4ksF7+hbgHXP0n8jzTNLJ+PA5nwuDuVgfYRSOUVqOwQfQJ08BARKutzZ5KJtO/7VdRdhHVEQGC9lHJxAFBfFyGfWVFze8QSKbdynRYMVH+8MEJFzgD/QJdfK2YHDJrAt/9FmnLTB4PAMsqOrOh07h2xbuv+FXgLSApKHp8Pz2LFiJ/BkiOb0U/nk+DNQnsE9/+CtkhbBadTbDEgLC744Rnx47IsRHBrgqYgp0YoPFhd8O6Vn2d3GSyWofmeVbxGwLukI8IVAmkZYipnTFSjSK2Yb+yput7t2EXd5WQX2Ov4aDPgGKsq7kq4DNxYX9+tVkX+O/1km19G34rJIsy1uYAoVJR/yITmaSQdLwRnbjLRy+kRwZ88qqFlkhcDa3yoUrNkXHwOjq4UZyUPtaGUYw/sYpBZwfGiVT30pRLgtBFPqp8UjcKYHM1bq/myUDkTX0N7mV6qOTmfLeSoyKMV0GcrScs5URIco1nR/xt9ILRkjI7U17wr8h3rqAUZnErxWh7IvpXqirl/D1vtrQ6kvszuL1Kc8Q5aEOVnKPuNxiVj0cixzypKceFGgYrYs0Tfh8JQ/6+GaznStFlFovzQp/irANtfrO7yLP6I5PFRVrNK1qgEv4NgPZcuQSO0dpTlmPQVFpV7zUXBJuH9ukGvxCviUcLesSxAZdSIe1T/35zWHM3hNBIniSaOPpV5kHplwsi+/zvroQeERadhdedxzLS+2Vens6urOHWISzH0egXZbY4BVWDlgBfRhXtD3n03ryLeTGX/YLHLyaFgQ2eGkgdWR5LqBFvMrXI2MGp5W12r2xlwLH86ipc/yWjCMzHBQZgJ1sX8xbMhNr6s9j5s9jvG0nzAL7z3oY0t72TDUscO6F74DGy03qp5tzPFmnkmQC3Bdta8llOURCpjhirTT4fGkbTrYO4fw4SXd8dCMXT26YoSoG45mEVfzkcqNXxAr2TlIqdPFHUqcWox+Ac2LKJCtcEN04JGSuv7wj8BTxk9rbDbWZ1VKUw0AVxWaUmobP/g932GPt5hTy/W8ys6+1GbqgDl6MdgB7MuZNnusVumK2t4G1qWxgQaCQ+JoBhRmnhjKe7PuIt493MLrof6487lGPGLdQKtb7cBPnz2+rmWuRIunrCUbfHLDlvGQQb0eok9MN1uzO5Ia0OQBZU6GXjFRs8h6aQFy5bu8To3viCuTbMWX//dN/efZu/AIYh5iHR+MLS4RFpeZDFSFLkV5hI3Uy23yAv3poy8sSRuK2/OOEXs1N9sVlR7aeWCbNeugk+aTSNCQL5RXHN8U1qQz/dakZuEJ0jqNGZZzhzkABtsby0+t0uUtSXbOLSLJBPKAvtLs+RDF6Nc89nYpr0aVoBCl6BVJDQFh8k++5AxvLfVr1mykGPANhoByyAuK0IxIbYNpMWoCnwgMjgIG0rYlcGhVZK0pnS3mgEjXU6EOz9lNF3xnaiVhE6BKOPUd2Gl0z7vx3yx67Ai4PD2FFt/922r86PyALTEaIq5lxqApl0JjKqFV+YeTUSQ8h9i4n2HfAI9XAisCci7iOh8NYFHErreehPUBD68t5lpFSrZgINdDjyNji3NfoaqXckthIYWfYHQeQQm7pnUHwuS97Hxep31PQWIfj2ffskYwgTi88J7pnmB2wmeAStOqVdXTd7+Tf0ufxYRd/4wn6XP6PVR09CY4YKiPZUqC/fTBxBtvMV09RW8z5nSXqURcq4BeniB/IuxDz3oY5Cr5lxz+AySaMy6RdOjlDhq3v/da4fGklsf9C4fmhZXJT3L9RT4EIH4UxUgzfTGwyLHilOTJwGfxa8vHeRP1cJbkn85wbe5BUscI6qixTBjqMbugGWa34ksm2hxs8dY/R3/1PWhf+5Z1tGD1w2ZCypeM8/NNBT/HATfToD1ID5wM2gbZOj/Oxm5n+WBukN1DIClwEm1J1k/S9zZK9SZkpb8CuQM4NSyhvlTv9RGKTCvkepU76eXWlE4Nc0AAAABOQALoCOPUAAuL+ETBst6ce/OtIk/q/cYbnPPXisSMeaDSnJzrGYn61/9I7FMWadvIpckvN6t75evZqOqEwLe8tWH9qMU5xLEjcgE64VgpvwFIrQt5lQv/9Y5QkJ7Ti3OBnBEMAeop3IsRjGqXpdKmgcHDHH4C6ZChQF0z0EbGYegnVmNZ0hoyNqaSxX15BBlieaIpEeSZ8nHjsCjZP+u5yx5AHMd1Luz8KkpFqCS79UYWSc1mQEIj/1DbiCLgAMAE8AAADVSq+g82qXNo9YkBSYINFSPq35Tz5hw0/VnwIgj1eW9PMu5YFCQnlJYtjndXhgXfHPwY1nsdfgdUQ8yr/qjtZ+OXyVLalDGl7Fh2itc4kjgMha1WEiu9OhrzgWcWd64hk1wfpj+wo435hMBoGdwAAABu1EkX6AAAAAAAA=" alt="Mahdi"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About me -->
+        <section class="section container" id="about">
+            <div class="section-eyebrow"><span class="tab-dot"></span>about.md</div>
+            <h2 class="section-title">📖 <span>درباره</span> من</h2>
+            <div class="section-card">
+                <div class="about-grid">
+                    <div class="about-text">
+                        <p>
+                            من <span class="highlight">Mahdi</span> هستم، یک برنامه‌نویس تازه‌کار اما <span class="highlight">عاشق کد و خلاقیت</span>.
+                            از <span class="highlight">بندرعباس</span>، شهری با هوای گرم و دل‌های گرم‌تر.
+                        </p>
+                        <p>
+                            ماجرای من از <span class="highlight">سال 1403</span> شروع شد. روزی که برای اولین بار با دنیای برنامه‌نویسی آشنا شدم.
+                            از همون روز اول، <strong>عاشق</strong> این شدم که با چند خط کد، چیزی رو از صفر خلق کنم.
+                            حسی که هیچ‌چیز دیگه‌ای نمی‌تونه بهم بده.
+                        </p>
+                        <p>
+                            امروز دارم روی <span class="highlight">پایتون</span>، <span class="highlight">سی‌شارپ</span> و
+                            <span class="highlight">طراحی وب</span> تمرکز می‌کنم. هر روز یه چیز جدید یاد می‌گیرم و
+                            سعی می‌کنم قدم‌به‌قدم به سمت <strong>پروژه‌های جدی</strong> حرکت کنم.
+                        </p>
+                        <p>
+                            وقتی پای کد نیستم، <span class="highlight">فوتبال</span> و <span class="highlight">ماشین</span>
+                            دو تا از عشق‌های من هستند.
+                            <br>
+                            و راستی، <span style="color: #3b82f6; font-weight: 600;">آبی</span> رو خیلی دوست دارم،
+                            چون برام نماد تلاش و موفقیت‌ست.
+                        </p>
+                        <p>
+                            <strong>چرا این وبسایت رو ساختم؟</strong>
+                            <br>
+                            برای اینکه مسیر یادگیری‌ام رو ثبت کنم. جایی برای نمایش پروژه‌ها، نوشتن تجربه‌ها و
+                            شاید هم <span class="highlight">الهام‌بخشیدن</span> به کسایی که تازه می‌خوان وارد این مسیر بشن.
+                        </p>
+                        <p style="margin-top: 16px; font-size: 18px; color: #3b82f6; font-weight: 600;">
+                            «من Mahdi هستم. از بندرعباس، عاشق کد، فوتبال، ماشین و رنگ آبی.»
+                        </p>
+                    </div>
+                    <div class="about-details">
+                        <ul>
+                            <li><span class="label">📅 شروع کار</span><span class="value">1403</span></li>
+                            <li><span class="label">📍 موقعیت</span><span class="value">بندرعباس، ایران</span></li>
+                            <li><span class="label">💻 تخصص‌ها</span><span class="value">پایتون • سی‌شارپ • طراحی وب</span></li>
+                            <li><span class="label">📚 در حال یادگیری</span><span class="value">Django • ASP.NET Core</span></li>
+                            <li><span class="label">⚽ علاقه‌مندی‌ها</span><span class="value">فوتبال • ماشین • کد زدن</span></li>
+                            <li><span class="label">🎨 رنگ مورد علاقه</span><span class="value" style="color: #3b82f6; font-weight: 600;">آبی 💙</span></li>
+                            <li><span class="label">🎯 هدف</span><span class="value">ساختن پروژه‌های جدی و تأثیرگذار</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills -->
+        <section class="section container" id="skills">
+            <div class="section-eyebrow"><span class="tab-dot"></span>skills.json</div>
+            <h2 class="section-title">🛠️ <span>مهارت‌های</span> من</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <span class="emoji">🐍</span>
+                    <h4>Python</h4>
+                    <p>پایتون، Django، Flask</p>
+                </div>
+                <div class="skill-card">
+                    <span class="emoji">🔷</span>
+                    <h4>C#</h4>
+                    <p>سی‌شارپ، .NET، ASP.NET</p>
+                </div>
+                <div class="skill-card">
+                    <span class="emoji">🌐</span>
+                    <h4>طراحی وب</h4>
+                    <p>HTML، CSS، JavaScript، React</p>
+                </div>
+                <div class="skill-card">
+                    <span class="emoji">🗄️</span>
+                    <h4>Database</h4>
+                    <p>SQL، SQLite، MySQL</p>
+                </div>
+                <div class="skill-card">
+                    <span class="emoji">📦</span>
+                    <h4>Git & GitHub</h4>
+                    <p>کنترل نسخه، همکاری تیمی</p>
+                </div>
+                <div class="skill-card">
+                    <span class="emoji">🎨</span>
+                    <h4>UI/UX</h4>
+                    <p>طراحی رابط کاربری، تجربه کاربری</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio -->
+        <section class="section container" id="portfolio">
+            <div class="section-eyebrow"><span class="tab-dot"></span>portfolio/</div>
+            <h2 class="section-title">✨ <span>نمونه‌کارهای</span> من</h2>
+            <div class="portfolio-grid">
+
+                <div class="portfolio-card">
+                    <div class="icon">🚗</div>
+                    <h4>فرم لاگین با طراحی BMW</h4>
+                    <p>طراحی فرم ورود و ثبت‌نام با الهام از هویت بصری برند BMW. رنگ‌های مشکی، سفید و طلایی با انیمیشن‌های نرم.</p>
+                    <div class="tags">
+                        <span>HTML</span>
+                        <span>CSS</span>
+                        <span>JavaScript</span>
+                    </div>
+                </div>
+
+                <div class="portfolio-card">
+                    <div class="icon">🧮</div>
+                    <h4>ماشین حساب پیشرفته</h4>
+                    <p>ماشین‌حساب کامل با عملیات پایه، علمی، توابع مثلثاتی و تاریخچه محاسبات. طراحی مدرن و واکنش‌گرا.</p>
+                    <div class="tags">
+                        <span>HTML</span>
+                        <span>CSS</span>
+                        <span>JavaScript</span>
+                        <span>Math.js</span>
+                    </div>
+                </div>
+
+                <div class="portfolio-card">
+                    <div class="icon">🤖</div>
+                    <h4>هوش مصنوعی با داده‌های کافی</h4>
+                    <p>مدل هوش مصنوعی آموزش‌دیده با دیتاست جامع. قابلیت پیش‌بینی، تحلیل داده و تشخیص الگو با Python.</p>
+                    <div class="tags">
+                        <span>Python</span>
+                        <span>TensorFlow</span>
+                        <span>Scikit-learn</span>
+                        <span>Pandas</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Career path -->
+        <section class="section container" id="timeline">
+            <div class="section-eyebrow"><span class="tab-dot"></span>timeline.log</div>
+            <h2 class="section-title">🚀 <span>مسیر</span> حرفه‌ای من</h2>
+
+            <div class="timeline-item">
+                <div class="year">1403</div>
+                <div class="info">
+                    <h4>شروع یادگیری برنامه‌نویسی</h4>
+                    <p>آشنایی با پایتون، سی‌شارپ و طراحی وب. شروع به ساختن پروژه‌های کوچک و تمرینی</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="year">1404</div>
+                <div class="info">
+                    <h4>ساخت پروژه‌های جدی</h4>
+                    <p>طراحی فرم لاگین BMW، ماشین حساب پیشرفته و شروع به کار روی هوش مصنوعی</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="year">1405</div>
+                <div class="info">
+                    <h4>راه‌اندازی وبسایت شخصی</h4>
+                    <p>ایجاد وبسایت معرفی و نمایش نمونه‌کارها برای به‌اشتراک‌گذاری مسیر یادگیری</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Blog -->
+        <section class="section container" id="blog">
+            <div class="section-eyebrow"><span class="tab-dot"></span>blog.md</div>
+            <h2 class="section-title">📝 <span>آخرین</span> مطالب وبلاگ</h2>
+            <div class="blog-list">
+                <a href="blog/login-bmw.html" class="blog-item">
+                    <h4>چطور فرم لاگین با طراحی BMW ساختم؟</h4>
+                    <small>1404/11/28 | 5 دقیقه مطالعه</small>
+                </a>
+                <a href="blog/calculator-js.html" class="blog-item">
+                    <h4>آموزش ساخت ماشین حساب پیشرفته با جاوااسکریپت</h4>
+                    <small>1404/11/20 | 8 دقیقه مطالعه</small>
+                </a>
+                <a href="blog/python-ai.html" class="blog-item">
+                    <h4>شروع هوش مصنوعی با Python: از کجا شروع کنیم؟</h4>
+                    <small>1404/11/16 | 6 دقیقه مطالعه</small>
+                </a>
+            </div>
+        </section>
+
+        <!-- Quote -->
+        <section class="quote-section container">
+            <blockquote>
+                بهترین زمان برای شروع برنامه‌نویسی دیروز بود، دومین زمان خوب همین الان است.
+                هر کدی که امروز مینویسی، فردا تبدیل به تجربه‌ای میشه که به کارت میاد.
+            </blockquote>
+            <div class="author"></div>
+        </section>
+
+        <!-- Contact -->
+        <section class="section container" id="contact">
+            <div class="section-eyebrow"><span class="tab-dot"></span>contact.sh</div>
+            <h2 class="section-title">📬 <span>ارتباط</span> با من</h2>
+            <p class="contact-text">
+                من رو در اینستاگرام دنبال کنید و هر سوالی دارید، بپرسید!
+                <br>
+                اونجا فعالیت‌های روزانه‌ام رو به‌اشتراک می‌ذارم.
+            </p>
+
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;">
+                <a href="https://instagram.com/mahdiarkar.dev" 
+                   target="_blank" 
+                   class="social-btn">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" 
+                              fill="currentColor"/>
+                    </svg>
+                    <span class="sb-label">اینستاگرام</span>
+                    <span style="font-size: 14px; opacity: 0.8;">mahdiarkar.dev</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Smart chat assistant -->
+        <div id="chatWidget">
+            <button id="chatToggleBtn" onclick="toggleChat()" title="چت با دستیار Mahdi">💬</button>
+            <div id="chatPanel">
+                <div class="chat-header">
+                    <span>🤖 دستیار Mahdi</span>
+                    <button class="chat-close" onclick="toggleChat()">✕</button>
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input-row">
+                    <input type="text" id="chatInput" placeholder="سوالت رو بپرس..." onkeydown="if(event.key==='Enter'){sendChatMessage();}">
+                    <button onclick="sendChatMessage()">➤</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll to top button -->
+        <button onclick="topFunction()" id="scrollBtn">⬆</button>
+
+    </div>
+
+    <!-- ============================================================
+    JavaScript
+    ============================================================ -->
+    <script>
+        // ============================================================
+        // ============================================================
+        // Initialize the site
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', initVisualEffects);
+
+        // ============================================================
+        // Mobile menu
+        // ============================================================
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('open');
+            });
+        });
+
+        // ============================================================
+        // Smooth scroll
+        // ============================================================
+        document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ============================================================
+        // Active tab tracking while scrolling
+        // ============================================================
+        (function () {
+            const navTabs = document.querySelectorAll('.nav-links a[href^="#"]');
+            const sections = Array.from(navTabs)
+                .map(a => document.querySelector(a.getAttribute('href')))
+                .filter(Boolean);
+            if (!sections.length) return;
+
+            const spy = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navTabs.forEach(a => {
+                            a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+                        });
+                    }
+                });
+            }, { rootMargin: '-40% 0px -50% 0px' });
+
+            sections.forEach(sec => spy.observe(sec));
+        })();
+
+        // ============================================================
+        // Scroll to top button
+        // ============================================================
+        window.onscroll = function() {
+            var btn = document.getElementById('scrollBtn');
+            if (document.documentElement.scrollTop > 300) {
+                btn.style.display = "block";
+            } else {
+                btn.style.display = "none";
+            }
+        };
+
+        function topFunction() {
+            document.documentElement.scrollTop = 0;
+        }
+
+        // ============================================================
+        // General visual effects initializer (runs only once)
+        // ============================================================
+        function initVisualEffects() {
+            if (window._effectsInitialized) return;
+            window._effectsInitialized = true;
+            initParticles('particlesCanvas');
+            initTypingEffect();
+            initScrollReveal();
+            initTiltEffects();
+            initCustomCursor();
+            initMagneticButtons();
+            init3DBackground();
+        }
+
+        // ============================================================
+        // Terminal-style boot loader
+        // ============================================================
+        function runBootLoader() {
+            const loader = document.getElementById('bootLoader');
+            const textEl = document.getElementById('bootText');
+            if (!loader || !textEl) return;
+
+            if (sessionStorage.getItem('bootSeen')) {
+                loader.classList.add('done');
+                return;
+            }
+
+            const bootLines = [
+                "> booting mahdi.dev ...",
+                "> loading skills: [Python, C#, .NET, HTML, CSS, JS]",
+                "> compiling portfolio...",
+                "> status: ready ✔"
+            ];
+
+            let lineIndex = 0;
+            let charIndex = 0;
+
+            function typeStep() {
+                if (lineIndex >= bootLines.length) {
+                    sessionStorage.setItem('bootSeen', '1');
+                    setTimeout(() => loader.classList.add('done'), 500);
+                    return;
+                }
+                const line = bootLines[lineIndex];
+                charIndex++;
+                const done = bootLines.slice(0, lineIndex).join('\n');
+                textEl.textContent = (done ? done + '\n' : '') + line.slice(0, charIndex);
+
+                if (charIndex >= line.length) {
+                    lineIndex++;
+                    charIndex = 0;
+                    setTimeout(typeStep, 260);
+                } else {
+                    setTimeout(typeStep, 16);
+                }
+            }
+            typeStep();
+
+            loader.addEventListener('click', () => {
+                sessionStorage.setItem('bootSeen', '1');
+                loader.classList.add('done');
+            });
+        }
+        document.addEventListener('DOMContentLoaded', runBootLoader);
+
+        // ============================================================
+        // Custom magnetic cursor (desktop only)
+        // ============================================================
+        function initCustomCursor() {
+            if (!window.matchMedia('(pointer: fine)').matches) return;
+
+            const dot = document.createElement('div');
+            dot.id = 'cursorDot';
+            const ring = document.createElement('div');
+            ring.id = 'cursorRing';
+            document.body.appendChild(dot);
+            document.body.appendChild(ring);
+            document.body.classList.add('custom-cursor-active');
+
+            let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                dot.style.left = mouseX + 'px';
+                dot.style.top = mouseY + 'px';
+            });
+
+            function loop() {
+                ringX += (mouseX - ringX) * 0.18;
+                ringY += (mouseY - ringY) * 0.18;
+                ring.style.left = ringX + 'px';
+                ring.style.top = ringY + 'px';
+                requestAnimationFrame(loop);
+            }
+            loop();
+
+            const hoverTargets = document.querySelectorAll(
+                'a, button, .skill-card, .portfolio-card, input, .blog-item, .timeline-item'
+            );
+            hoverTargets.forEach(el => {
+                el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+                el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+            });
+
+            document.addEventListener('mousedown', () => dot.classList.add('click'));
+            document.addEventListener('mouseup', () => dot.classList.remove('click'));
+        }
+
+        // ============================================================
+        // Magnetic pull effect on main buttons
+        // ============================================================
+        function initMagneticButtons() {
+            if (!window.matchMedia('(pointer: fine)').matches) return;
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    btn.style.transform = `translate(${x * 0.25}px, ${y * 0.35}px)`;
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = '';
+                });
+            });
+        }
+
+        // ============================================================
+        // Floating particles in the hero background
+        // ============================================================
+        // ============================================================
+        // Real 3D scene (Three.js) — floating wireframe shapes + starfield,
+        // drifting slowly and reacting to mouse/scroll for parallax depth.
+        // ============================================================
+        function init3DBackground() {
+            const canvas = document.getElementById('three-bg');
+            if (!canvas || typeof THREE === 'undefined') return;
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+            const isMobile = window.innerWidth < 768;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 22;
+
+            const renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                alpha: true,
+                antialias: true
+            });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // ---- Wider, more vivid color palette (still keyed to the site's accents) ----
+            const colors = [0x3b82f6, 0x00d4ff, 0x60a5fa, 0x7db4ff, 0x38bdf8, 0x5ce1e6, 0x2563eb, 0x93c5fd];
+
+            // ---- Wireframe geometric shapes floating in space ----
+            const shapes = [];
+            const geometries = [
+                new THREE.IcosahedronGeometry(2.4, 0),
+                new THREE.TorusGeometry(1.8, 0.55, 8, 24),
+                new THREE.OctahedronGeometry(2, 0),
+                new THREE.TorusKnotGeometry(1.3, 0.4, 64, 8),
+                new THREE.TetrahedronGeometry(2.1, 0)
+            ];
+            const shapeCount = isMobile ? 9 : 16;
+
+            for (let i = 0; i < shapeCount; i++) {
+                const geo = geometries[i % geometries.length];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const mat = new THREE.MeshBasicMaterial({
+                    color: color,
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.35
+                });
+                const mesh = new THREE.Mesh(geo, mat);
+
+                mesh.position.set(
+                    (Math.random() - 0.5) * 46,
+                    (Math.random() - 0.5) * 32,
+                    (Math.random() - 0.5) * 24 - 6
+                );
+                const scale = 0.5 + Math.random() * 0.85;
+                mesh.scale.setScalar(scale);
+                mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+
+                mesh.userData.rotSpeed = {
+                    x: (Math.random() - 0.5) * 0.014,
+                    y: (Math.random() - 0.5) * 0.014,
+                    z: (Math.random() - 0.5) * 0.01
+                };
+                mesh.userData.floatSpeed = 0.25 + Math.random() * 0.4;
+                mesh.userData.floatOffset = Math.random() * Math.PI * 2;
+                mesh.userData.baseY = mesh.position.y;
+
+                scene.add(mesh);
+                shapes.push(mesh);
+            }
+
+            // ---- Starfield / particle points for depth ----
+            const starCount = isMobile ? 300 : 700;
+            const starGeo = new THREE.BufferGeometry();
+            const starPositions = new Float32Array(starCount * 3);
+            for (let i = 0; i < starCount; i++) {
+                starPositions[i * 3] = (Math.random() - 0.5) * 70;
+                starPositions[i * 3 + 1] = (Math.random() - 0.5) * 50;
+                starPositions[i * 3 + 2] = (Math.random() - 0.5) * 40 - 10;
+            }
+            starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+            const starMat = new THREE.PointsMaterial({
+                color: 0x7db4ff,
+                size: 0.09,
+                transparent: true,
+                opacity: 0.6,
+                sizeAttenuation: true
+            });
+            const stars = new THREE.Points(starGeo, starMat);
+            scene.add(stars);
+
+            // ---- Day / night: tune the 3D scene for the current theme ----
+            window.__applySceneTheme = function (light) {
+                starMat.color.setHex(light ? 0x2563eb : 0x7db4ff);
+                starMat.opacity = light ? 0.5 : 0.6;
+                shapes.forEach(function (m) { m.material.opacity = light ? 0.42 : 0.35; });
+            };
+            window.__applySceneTheme(document.documentElement.getAttribute('data-theme') === 'light');
+
+            // ---- Mouse / scroll driven parallax ----
+            let mouseX = 0, mouseY = 0;
+            let targetRotX = 0, targetRotY = 0;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth) - 0.5;
+                mouseY = (e.clientY / window.innerHeight) - 0.5;
+            }, { passive: true });
+
+            let scrollFactor = 0;
+            window.addEventListener('scroll', () => {
+                scrollFactor = window.scrollY * 0.002;
+            }, { passive: true });
+
+            // ---- Resize handling ----
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            const clock = new THREE.Clock();
+
+            function animate() {
+                requestAnimationFrame(animate);
+                const t = clock.getElapsedTime();
+
+                shapes.forEach((mesh) => {
+                    mesh.rotation.x += mesh.userData.rotSpeed.x;
+                    mesh.rotation.y += mesh.userData.rotSpeed.y;
+                    mesh.rotation.z += mesh.userData.rotSpeed.z;
+                    mesh.position.y = mesh.userData.baseY + Math.sin(t * mesh.userData.floatSpeed + mesh.userData.floatOffset) * 1.2;
+                });
+
+                stars.rotation.y = t * 0.015;
+
+                targetRotX += (mouseY * 0.3 - targetRotX) * 0.03;
+                targetRotY += (mouseX * 0.4 - targetRotY) * 0.03;
+                scene.rotation.x = targetRotX;
+                scene.rotation.y = targetRotY + scrollFactor * 0.15;
+                camera.position.y = -scrollFactor * 2;
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            requestAnimationFrame(() => canvas.classList.add('ready'));
+        }
+
+        function initParticles(canvasId, count) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const wrapper = canvas.parentElement;
+
+            function resize() {
+                canvas.width = wrapper.offsetWidth;
+                canvas.height = wrapper.offsetHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const total = count || (window.innerWidth < 768 ? 20 : 42);
+            const particles = [];
+            for (let i = 0; i < total; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 1.8 + 0.6,
+                    speedY: Math.random() * 0.35 + 0.1,
+                    speedX: (Math.random() - 0.5) * 0.25,
+                    alpha: Math.random() * 0.5 + 0.2
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y -= p.speedY;
+                    p.x += p.speedX;
+                    if (p.y < -5) { p.y = canvas.height + 5; p.x = Math.random() * canvas.width; }
+                    if (p.x < -5) p.x = canvas.width + 5;
+                    if (p.x > canvas.width + 5) p.x = -5;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(59, 130, 246, ${p.alpha})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // ============================================================
+        // Animated typing effect for hero subtitle
+        // ============================================================
+        function initTypingEffect() {
+            const el = document.getElementById('typedText');
+            if (!el) return;
+            const phrasesByLang = {
+                fa: [
+                    'برنامه‌نویس تازه‌کار اما عاشق',
+                    'علاقه‌مند به هوش مصنوعی',
+                    'عاشق طراحی وب',
+                    'یادگیرنده‌ی هر روزه'
+                ],
+                en: [
+                    'Beginner developer, in love with code',
+                    'Interested in artificial intelligence',
+                    'Web design enthusiast',
+                    'A daily learner'
+                ]
+            };
+            let phrases = phrasesByLang[document.documentElement.lang === 'en' ? 'en' : 'fa'];
+            window.__setTypingLang = function (lang) {
+                phrases = phrasesByLang[lang === 'en' ? 'en' : 'fa'];
+                phraseIndex = 0; charIndex = 0; deleting = false;
+            };
+            let phraseIndex = 0;
+            let charIndex = 0;
+            let deleting = false;
+
+            function tick() {
+                const current = phrases[phraseIndex];
+                if (!deleting) {
+                    charIndex++;
+                    el.textContent = current.slice(0, charIndex);
+                    if (charIndex === current.length) {
+                        deleting = true;
+                        setTimeout(tick, 1800);
+                        return;
+                    }
+                } else {
+                    charIndex--;
+                    el.textContent = current.slice(0, charIndex);
+                    if (charIndex === 0) {
+                        deleting = false;
+                        phraseIndex = (phraseIndex + 1) % phrases.length;
+                    }
+                }
+                setTimeout(tick, deleting ? 35 : 75);
+            }
+            tick();
+        }
+
+        // ============================================================
+        // Gradual reveal of sections on scroll
+        // ============================================================
+        function initScrollReveal() {
+            const targets = document.querySelectorAll(
+                '.section, .quote-section, .skill-card, .portfolio-card, .timeline-item, .blog-item'
+            );
+            targets.forEach((el, i) => {
+                el.classList.add('reveal');
+                el.style.transitionDelay = (i % 6) * 0.08 + 's';
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            targets.forEach(el => observer.observe(el));
+        }
+
+        // ============================================================
+        // 3D tilt effect on skill and portfolio cards
+        // ============================================================
+        function initTiltEffects() {
+            const cards = document.querySelectorAll('.skill-card, .portfolio-card');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -6;
+                    const rotateY = ((x - centerX) / centerX) * 6;
+                    card.style.transform = `perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                });
+            });
+        }
+
+        // ============================================================
+        // Smart chat assistant (predefined dataset, no API needed)
+        // ============================================================
+        const chatKnowledge = [
+            { keywords: ['مهارت', 'skill', 'بلد', 'تخصص'], answer: 'مهارت‌های اصلی من پایتون، سی‌شارپ (.NET) و طراحی وب (HTML/CSS/JS) هستن. الان دارم Django و ASP.NET Core هم یاد می‌گیرم 🛠️', en: 'My main skills are Python, C# (.NET) and web design (HTML/CSS/JS). I am also learning Django and ASP.NET Core right now 🛠️' },
+            { keywords: ['پروژه', 'نمونه کار', 'نمونه‌کار', 'portfolio', 'project'], answer: 'چند تا از پروژه‌هام: فرم لاگین با طراحی BMW، یه ماشین‌حساب پیشرفته و یه مدل هوش مصنوعی. جزئیاتش توی بخش «نمونه‌کارها»ست ✨', en: 'A few of my projects: a BMW-inspired login form, an advanced calculator and an AI model. Details are in the Portfolio section ✨' },
+            { keywords: ['کجا', 'اهل', 'location', 'شهر', 'بندرعباس', 'where', 'from', 'city'], answer: 'من اهل بندرعباسم؛ شهری با هوای گرم و دل‌های گرم‌تر 😄', en: 'I am from Bandar Abbas, a city with hot weather and even warmer hearts 😄' },
+            { keywords: ['تماس', 'contact', 'ارتباط', 'اینستاگرام', 'instagram'], answer: 'بهترین راه ارتباط، اینستاگرامه: mahdiarkar.dev — لینکش توی بخش «ارتباط با من» هست 📬', en: 'The best way to reach me is Instagram: mahdiarkar.dev — the link is in the Contact section 📬' },
+            { keywords: ['هدف', 'goal'], answer: 'هدفم ساختن پروژه‌های جدی و تأثیرگذاره؛ قدم‌به‌قدم از یه علاقه‌مند به یه برنامه‌نویس حرفه‌ای تبدیل بشم 🎯', en: 'My goal is to build serious, impactful projects and grow step by step from an enthusiast into a professional developer 🎯' },
+            { keywords: ['علاقه', 'فوتبال', 'ماشین', 'hobby', 'رنگ', 'football', 'color', 'colour', 'blue'], answer: 'بیرون از کدنویسی عاشق فوتبال و ماشینم! رنگ آبی رو هم خیلی دوست دارم 💙', en: 'Outside of coding I love football and cars! My favorite color is blue 💙' },
+            { keywords: ['سلام', 'hi', 'hello', 'hey', 'خوبی', 'سلاام'], answer: 'سلام! خوش اومدی 👋 هر سوالی درباره‌ی من، مهارت‌ها یا پروژه‌هام داری بپرس.', en: 'Hi! Welcome 👋 Ask me anything about me, my skills or my projects.' },
+            { keywords: ['کی هستی', 'تو کی', 'who are you'], answer: 'من دستیار کوچیک این سایتم و درباره‌ی Mahdi و کارهاش بهت جواب می‌دم 🤖', en: 'I am this site\'s little assistant, here to answer questions about Mahdi and his work 🤖' }
+        ];
+
+        function toggleChat() {
+            const panel = document.getElementById('chatPanel');
+            panel.classList.toggle('open');
+            if (panel.classList.contains('open') && !panel.dataset.greeted) {
+                panel.dataset.greeted = 'true';
+                appendChatMessage(document.documentElement.lang === 'en' ? 'Hi 👋 I am Mahdi\'s assistant. You can ask me about his skills, projects or interests!' : 'سلام 👋 من دستیار Mahdi هستم. می‌تونی درباره‌ی مهارت‌ها، پروژه‌ها یا علاقه‌مندی‌هاش ازم بپرسی!', 'bot');
+            }
+        }
+
+        function appendChatMessage(text, sender) {
+            const container = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = 'chat-msg ' + sender;
+            msg.textContent = text;
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function getBotReply(message) {
+            const lower = message.toLowerCase();
+            for (const entry of chatKnowledge) {
+                if (entry.keywords.some(k => lower.includes(k.toLowerCase()))) {
+                    return document.documentElement.lang === 'en' ? entry.en : entry.answer;
+                }
+            }
+            return document.documentElement.lang === 'en' ? 'I did not quite get that 🤔 Try asking about skills, projects or how to contact me.' : 'دقیق متوجه نشدم 🤔 می‌تونی درباره‌ی مهارت‌ها، پروژه‌ها یا راه ارتباطی بپرسی، یا از بخش «ارتباط با من» پیام بدی.';
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            appendChatMessage(text, 'user');
+            input.value = '';
+            setTimeout(() => {
+                appendChatMessage(getBotReply(text), 'bot');
+            }, 500);
+        }
+    </script>
+
+    <!-- Status bar -->
+    <div id="statusBar">
+        <div class="status-left">
+            <span class="status-item"><span class="badge-dot" style="margin-inline-end:2px"></span>online</span>
+            <span class="status-item">git:main</span>
+        </div>
+        <div class="status-right">
+            <span class="status-item">UTF-8</span>
+            <span class="status-item" id="statusLang">Persian (fa)</span>
+            <span class="status-item">Mahdi © 2026</span>
+        </div>
+    </div>
+
+<script>
+    // ============================================================
+    // Day / Night theme toggle (saved in the browser)
+    // ============================================================
+    function applyTheme(theme, animate, persist) {
+        var root = document.documentElement;
+        if (animate) {
+            root.classList.add('theme-anim');
+            setTimeout(function () { root.classList.remove('theme-anim'); }, 450);
+        }
+        root.setAttribute('data-theme', theme);
+        var btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.textContent = theme === 'light' ? '🌙' : '☀️';
+            var en = document.documentElement.lang === 'en';
+            var label = en ? (theme === 'light' ? 'Switch to night mode' : 'Switch to day mode') : (theme === 'light' ? 'تغییر به حالت شب' : 'تغییر به حالت روز');
+            btn.setAttribute('aria-label', label);
+            btn.title = label;
+        }
+        if (window.__applySceneTheme) window.__applySceneTheme(theme === 'light');
+        if (persist) { try { localStorage.setItem('theme', theme); } catch (e) {} }
+    }
+    function toggleTheme() {
+        var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        applyTheme(isLight ? 'dark' : 'light', true, true);
+    }
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark', false, false);
+    // follow the system day/night setting until the visitor picks one manually
+    (function () {
+        if (!window.matchMedia) return;
+        var mq = window.matchMedia('(prefers-color-scheme: light)');
+        var onChange = function (e) {
+            var saved = null;
+            try { saved = localStorage.getItem('theme'); } catch (err) {}
+            if (saved !== 'light' && saved !== 'dark') applyTheme(e.matches ? 'light' : 'dark', true, false);
+        };
+        if (mq.addEventListener) mq.addEventListener('change', onChange);
+        else if (mq.addListener) mq.addListener(onChange);
+    })();
+</script>
+
+<script>
+    // ============================================================
+    // Language switch (Persian <-> English) + scroll progress bar
+    // ============================================================
+    (function () {
+        var EN = [[".hero .tagline", 0, "«From Bandar Abbas to the world of code and creativity»"], [".hero-buttons a", 0, "$ about me"], [".hero-buttons a", 1, "$ contact me"], [".hero-buttons a", 2, "$ download resume"], [".section-title", 0, "📖 <span>About</span> me"], [".section-title", 1, "🛠️ <span>My</span> skills"], [".section-title", 2, "✨ <span>My</span> portfolio"], [".section-title", 3, "🚀 <span>My</span> career path"], [".section-title", 4, "📝 <span>Latest</span> blog posts"], [".section-title", 5, "📬 <span>Contact</span> me"], [".about-text p", 0, "I'm <span class=\"highlight\">Mahdi</span>, a beginner programmer but <span class=\"highlight\">in love with code and creativity</span>. From <span class=\"highlight\">Bandar Abbas</span>, a city with hot weather and even warmer hearts."], [".about-text p", 1, "My story began in the Persian year <span class=\"highlight\">1403</span>, the day I first met the world of programming. From day one I <strong>loved</strong> creating something from scratch with a few lines of code — a feeling nothing else can give me."], [".about-text p", 2, "Today I'm focusing on <span class=\"highlight\">Python</span>, <span class=\"highlight\">C#</span> and <span class=\"highlight\">web design</span>. I learn something new every day and try to move step by step toward <strong>serious projects</strong>."], [".about-text p", 3, "When I'm away from code, <span class=\"highlight\">football</span> and <span class=\"highlight\">cars</span> are two of my passions.<br>And by the way, I really love <span style=\"color: #3b82f6; font-weight: 600;\">blue</span>, because to me it stands for effort and success."], [".about-text p", 4, "<strong>Why did I build this website?</strong><br>To record my learning journey. A place to show projects, write about experiences and maybe <span class=\"highlight\">inspire</span> people who are just starting out on this path."], [".about-text p", 5, "«I'm Mahdi. From Bandar Abbas, in love with code, football, cars and the color blue.»"], [".about-details .label", 0, "📅 Started"], [".about-details .label", 1, "📍 Location"], [".about-details .label", 2, "💻 Skills"], [".about-details .label", 3, "📚 Learning"], [".about-details .label", 4, "⚽ Interests"], [".about-details .label", 5, "🎨 Favorite color"], [".about-details .label", 6, "🎯 Goal"], [".about-details .value", 0, "1403 (Persian calendar)"], [".about-details .value", 1, "Bandar Abbas, Iran"], [".about-details .value", 2, "Python • C# • Web design"], [".about-details .value", 3, "Django • ASP.NET Core"], [".about-details .value", 4, "Football • Cars • Coding"], [".about-details .value", 5, "Blue 💙"], [".about-details .value", 6, "Building serious, impactful projects"], [".skill-card h4", 2, "Web design"], [".skill-card p", 0, "Python, Django, Flask"], [".skill-card p", 1, "C#, .NET, ASP.NET"], [".skill-card p", 2, "HTML, CSS, JavaScript, React"], [".skill-card p", 3, "SQL, SQLite, MySQL"], [".skill-card p", 4, "Version control, teamwork"], [".skill-card p", 5, "User interface and user experience design"], [".portfolio-card h4", 0, "Login form with BMW-inspired design"], [".portfolio-card h4", 1, "Advanced calculator"], [".portfolio-card h4", 2, "AI model with sufficient data"], [".portfolio-card p", 0, "A sign-in and sign-up form inspired by the BMW brand identity. Black, white and gold colors with smooth animations."], [".portfolio-card p", 1, "A full calculator with basic and scientific operations, trigonometric functions and calculation history. Modern, responsive design."], [".portfolio-card p", 2, "An AI model trained on a comprehensive dataset, with prediction, data analysis and pattern recognition in Python."], [".timeline-item .info h4", 0, "Started learning programming"], [".timeline-item .info h4", 1, "Building serious projects"], [".timeline-item .info h4", 2, "Launching my personal website"], [".timeline-item .info p", 0, "Got to know Python, C# and web design, and started building small practice projects"], [".timeline-item .info p", 1, "Designed the BMW login form and an advanced calculator, and started working on artificial intelligence"], [".timeline-item .info p", 2, "Created a website to introduce myself, showcase my work and share my learning journey"], [".blog-item h4", 0, "How I built the BMW-style login form"], [".blog-item h4", 1, "Building an advanced calculator with JavaScript"], [".blog-item h4", 2, "Getting started with AI in Python: where to begin?"], [".blog-item small", 0, "1404/11/28 | 5 min read"], [".blog-item small", 1, "1404/11/20 | 8 min read"], [".blog-item small", 2, "1404/11/16 | 6 min read"], [".quote-section blockquote", 0, "The best time to start programming was yesterday; the second best time is right now. Every line of code you write today becomes experience that helps you tomorrow."], [".contact-text", 0, "Follow me on Instagram and ask me anything!<br>I share my day-to-day activities there."], [".sb-label", 0, "Instagram"], [".chat-header span:first-child", 0, "🤖 Mahdi's assistant"], ["#statusLang", 0, "English (en)"]];
+        var store = new Map();
+        var TITLE = { fa: 'Mahdi Arkar | وب‌سایت شخصی', en: 'Mahdi Arkar | Personal website' };
+
+        window.applyLang = function (lang, persist) {
+            lang = lang === 'en' ? 'en' : 'fa';
+            var root = document.documentElement;
+            root.lang = lang;
+            root.dir = lang === 'en' ? 'ltr' : 'rtl';
+            EN.forEach(function (row) {
+                var el = document.querySelectorAll(row[0])[row[1]];
+                if (!el) { console.warn('i18n: missing', row[0], row[1]); return; }
+                if (!store.has(el)) store.set(el, el.innerHTML);
+                el.innerHTML = lang === 'en' ? row[2] : store.get(el);
+            });
+            document.title = TITLE[lang];
+            var btn = document.getElementById('langToggle');
+            if (btn) {
+                btn.textContent = lang === 'en' ? 'فا' : 'EN';
+                var label = lang === 'en' ? 'تغییر زبان به فارسی' : 'Switch to English';
+                btn.title = label; btn.setAttribute('aria-label', label);
+            }
+            var chatBtn = document.getElementById('chatToggleBtn');
+            if (chatBtn) chatBtn.title = lang === 'en' ? 'Chat with Mahdi\'s assistant' : 'چت با دستیار Mahdi';
+            var input = document.getElementById('chatInput');
+            if (input) input.placeholder = lang === 'en' ? 'Ask me anything...' : 'سوالت رو بپرس...';
+            var themeBtn = document.getElementById('themeToggle');
+            if (themeBtn) {
+                var isLight = root.getAttribute('data-theme') === 'light';
+                var lbl = lang === 'en' ? (isLight ? 'Switch to night mode' : 'Switch to day mode') : (isLight ? 'تغییر به حالت شب' : 'تغییر به حالت روز');
+                themeBtn.title = lbl; themeBtn.setAttribute('aria-label', lbl);
+            }
+            if (window.__setTypingLang) window.__setTypingLang(lang);
+            if (persist) { try { localStorage.setItem('lang', lang); } catch (e) {} }
+        };
+        window.toggleLang = function () {
+            window.applyLang(document.documentElement.lang === 'en' ? 'fa' : 'en', true);
+        };
+
+        var saved = null;
+        try { saved = localStorage.getItem('lang'); } catch (e) {}
+        window.applyLang(saved === 'en' ? 'en' : 'fa', false);
+
+        var bar = document.getElementById('scrollProgress'), ticking = false;
+        function update() {
+            var h = document.documentElement.scrollHeight - window.innerHeight;
+            bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+            ticking = false;
+        }
+        window.addEventListener('scroll', function () {
+            if (!ticking) { ticking = true; requestAnimationFrame(update); }
+        }, { passive: true });
+        window.addEventListener('resize', update);
+        update();
+    })();
+</script>
+</body>
+</html>
